@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pranav Balachander</title>
+<meta name="description" content="Pranav Balachander. Computer Science graduate building AI/ML systems and software. Published IEEE researcher." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f7f7f5;
+    --surface:#ffffff;
+    --fg:#15151a;
+    --muted:#6a6a72;
+    --faint:#9b9ba3;
+    --line:#e9e8e3;
+    --accent:#3253e0;
+    --accent-2:#5b7bff;
+    --accent-soft:#eef1fd;
+    --sans:'Hanken Grotesk',-apple-system,BlinkMacSystemFont,sans-serif;
+    --ease:cubic-bezier(.22,.61,.36,1);
+    --shadow:0 1px 2px rgba(20,20,40,.03), 0 10px 30px -8px rgba(20,20,50,.08);
+    --max:1000px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-weight:400;line-height:1.6;-webkit-font-smoothing:antialiased;font-size:16px;letter-spacing:-.005em;overflow-x:hidden}
+  a{color:inherit;text-decoration:none}
+  ::selection{background:var(--accent);color:#fff}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 clamp(22px,5vw,48px)}
+
+  /* header */
+  header{position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--bg) 80%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+  .bar{display:flex;align-items:center;justify-content:space-between;height:66px}
+  .logo{display:flex;align-items:center;gap:11px;font-weight:700;font-size:15px;letter-spacing:-.01em}
+  .mono{width:30px;height:30px;border-radius:9px;background:var(--fg);color:var(--bg);display:grid;place-items:center;font-size:13px;font-weight:700;letter-spacing:-.02em}
+  nav{display:flex;gap:6px}
+  nav a{font-size:14px;color:var(--muted);padding:8px 14px;border-radius:9px;transition:color .25s var(--ease),background .25s var(--ease)}
+  nav a:hover{color:var(--fg);background:rgba(0,0,0,.04)}
+  @media(max-width:600px){nav a{padding:8px 10px;font-size:13px}}
+
+  /* hero */
+  .hero{position:relative;padding:clamp(52px,11vh,108px) 0 clamp(48px,8vh,80px)}
+  .glow{position:absolute;top:-60px;left:30%;width:560px;height:420px;max-width:90%;border-radius:50%;
+    background:radial-gradient(closest-side,rgba(50,83,224,.16),transparent 72%);
+    filter:blur(24px);pointer-events:none;z-index:0;animation:drift 16s ease-in-out infinite alternate}
+  @keyframes drift{0%{transform:translate(-24px,-12px) scale(1)}100%{transform:translate(40px,26px) scale(1.12)}}
+  .hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:1fr 270px;gap:clamp(28px,5vw,56px);align-items:center}
+  @media(max-width:780px){.hero-grid{grid-template-columns:1fr;gap:32px}}
+
+  .badge{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:500;color:var(--muted);background:var(--surface);border:1px solid var(--line);padding:7px 14px;border-radius:100px;margin-bottom:clamp(20px,4vh,30px);box-shadow:var(--shadow)}
+  .badge .dot{width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 3px rgba(34,197,94,.18);animation:blip 2.6s infinite}
+  @keyframes blip{0%,100%{box-shadow:0 0 0 3px rgba(34,197,94,.18)}50%{box-shadow:0 0 0 5px rgba(34,197,94,.06)}}
+  h1{font-weight:800;font-size:clamp(40px,7.5vw,82px);line-height:1.02;letter-spacing:-.04em;margin-bottom:clamp(18px,3.5vh,26px)}
+  .intro{font-size:clamp(17px,2.1vw,20px);line-height:1.5;color:var(--muted);max-width:42ch}
+  .intro b{color:var(--fg);font-weight:600}
+  .meta-line{margin-top:16px;font-size:14.5px;color:var(--faint)}
+  .meta-line b{color:var(--muted);font-weight:500}
+  .hero-links{margin-top:clamp(26px,4.5vh,38px);display:flex;gap:12px;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;gap:8px;font-size:14.5px;font-weight:600;padding:12px 20px;border-radius:11px;transition:transform .25s var(--ease),box-shadow .25s var(--ease),border-color .25s var(--ease)}
+  .btn svg{width:16px;height:16px;flex-shrink:0}
+  .btn.primary{background:var(--fg);color:var(--bg)}
+  .btn.primary:hover{transform:translateY(-2px);box-shadow:0 12px 24px -8px rgba(20,20,40,.4)}
+  .btn.ghost{background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow)}
+  .btn.ghost:hover{transform:translateY(-2px);border-color:#d7d5cf}
+
+  /* photo */
+  .hero-photo{justify-self:center}
+  @media(max-width:780px){.hero-photo{justify-self:start}}
+  .photo{position:relative;width:clamp(180px,40vw,250px);aspect-ratio:4/5;border-radius:22px;overflow:hidden;box-shadow:0 20px 50px -18px rgba(20,30,80,.34);border:5px solid var(--surface)}
+  .photo::after{content:"";position:absolute;inset:0;border-radius:18px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.05);pointer-events:none}
+  .photo img{width:100%;height:100%;object-fit:cover;display:block}
+  .photo-fallback{position:absolute;inset:0;display:grid;place-items:center;font-size:64px;font-weight:800;letter-spacing:-.04em;color:#fff;
+    background:linear-gradient(150deg,var(--accent) 0%,var(--accent-2) 60%,#8aa0ff 100%)}
+  .photo-ring{position:absolute;inset:-14px;border-radius:30px;border:1px solid var(--line);z-index:-1}
+
+  /* section frame */
+  section.blk{padding:clamp(46px,7vh,70px) 0}
+  .sec-top{display:flex;align-items:center;gap:12px;margin-bottom:clamp(24px,4vh,34px)}
+  .sec-top .num{font-size:12.5px;font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums}
+  .sec-top h2{font-size:14px;font-weight:600;letter-spacing:.02em;color:var(--muted)}
+  .sec-top .ln{flex:1;height:1px;background:var(--line)}
+
+  /* work */
+  .row{display:block;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:22px 24px;margin-bottom:12px;transition:transform .35s var(--ease),box-shadow .35s var(--ease),border-color .35s var(--ease)}
+  .row:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:#dcdad3}
+  .row .head{display:flex;justify-content:space-between;align-items:baseline;gap:14px;flex-wrap:wrap}
+  .row .co{font-weight:700;font-size:18px;letter-spacing:-.02em}
+  .row .dt{font-size:13px;color:var(--faint);white-space:nowrap;font-variant-numeric:tabular-nums}
+  .row .ro{font-size:14px;color:var(--accent);font-weight:600;margin:4px 0 12px}
+  .row .ro .loc{color:var(--muted);font-weight:400}
+  .row p{font-size:14.5px;color:var(--muted);line-height:1.6;max-width:70ch}
+  .row p strong{color:var(--fg);font-weight:600}
+
+  /* projects */
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:640px){.grid{grid-template-columns:1fr}}
+  .card{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:24px;transition:transform .35s var(--ease),box-shadow .35s var(--ease),border-color .35s var(--ease)}
+  .card:hover{transform:translateY(-4px);box-shadow:var(--shadow);border-color:#c9d2f5}
+  .card .head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:9px}
+  .card h3{font-weight:700;font-size:18px;letter-spacing:-.02em;transition:color .3s var(--ease)}
+  .card:hover h3{color:var(--accent)}
+  .card .date{font-size:12.5px;color:var(--faint);font-variant-numeric:tabular-nums}
+  .card .stack{display:inline-block;font-size:12px;font-weight:600;color:var(--accent);background:var(--accent-soft);padding:4px 10px;border-radius:7px;margin-bottom:13px}
+  .card p{font-size:14px;color:var(--muted);line-height:1.58}
+  .card{cursor:pointer}
+  .card h3 .go{display:inline-block;opacity:0;transform:translateX(-5px);color:var(--accent);font-weight:700;transition:opacity .3s var(--ease),transform .3s var(--ease)}
+  .card:hover h3 .go{opacity:1;transform:none}
+  .card:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+  /* research */
+  .pub{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:clamp(26px,4vw,38px);box-shadow:var(--shadow)}
+  .pub .tag{display:inline-block;font-size:11.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:5px 11px;border-radius:7px;margin-bottom:16px}
+  .pub h3{font-weight:700;font-size:clamp(20px,2.6vw,26px);letter-spacing:-.025em;line-height:1.2;margin-bottom:13px}
+  .pub p{font-size:15px;color:var(--muted);line-height:1.62;max-width:70ch;margin-bottom:14px}
+  .pub .venue{font-size:13px;color:var(--faint)}
+  .pub .venue b{color:var(--fg);font-weight:600}
+  .pub-links{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:18px}
+  .pub h3 a{transition:color .25s var(--ease)}
+  .pub h3 a:hover{color:var(--accent)}
+  .paperlink{display:inline-flex;align-items:center;gap:8px;font-size:13.5px;font-weight:600;color:#fff;background:var(--accent);border:1px solid var(--accent);padding:9px 15px;border-radius:10px;transition:transform .25s var(--ease),box-shadow .25s var(--ease)}
+  .paperlink:hover{transform:translateY(-2px);box-shadow:0 10px 22px -10px rgba(50,83,224,.6)}
+  .paperlink svg{width:15px;height:15px;flex-shrink:0}
+  .orcid{display:inline-flex;align-items:center;gap:8px;font-size:13.5px;font-weight:600;color:var(--fg);background:var(--surface);border:1px solid var(--line);padding:8px 14px;border-radius:10px;transition:border-color .25s var(--ease),transform .25s var(--ease),box-shadow .25s var(--ease)}
+  .orcid:hover{border-color:#A6CE39;transform:translateY(-2px);box-shadow:var(--shadow)}
+  .clinks a.oc{display:inline-flex;align-items:center;gap:7px}
+
+  /* skills */
+  .skillset{display:flex;flex-direction:column;gap:18px}
+  .skillrow{display:grid;grid-template-columns:118px 1fr;gap:18px;align-items:start}
+  @media(max-width:560px){.skillrow{grid-template-columns:1fr;gap:8px}}
+  .skillrow .cat{font-size:13.5px;font-weight:700;padding-top:6px;letter-spacing:-.01em}
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{font-size:13px;font-weight:500;color:var(--fg);background:var(--surface);border:1px solid var(--line);padding:6px 13px;border-radius:9px;transition:border-color .25s var(--ease),transform .25s var(--ease),color .25s var(--ease)}
+  .chip:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-2px)}
+
+  /* contact */
+  .contact{padding:clamp(56px,10vh,104px) 0 clamp(40px,7vh,68px)}
+  .panel{background:var(--fg);color:var(--bg);border-radius:24px;padding:clamp(40px,6vw,68px);text-align:center;position:relative;overflow:hidden}
+  .panel .sheen{position:absolute;top:-50%;left:50%;width:680px;height:520px;transform:translateX(-50%);
+    background:radial-gradient(closest-side,rgba(91,123,255,.55),transparent 70%);opacity:.55;pointer-events:none;
+    animation:sheen 12s ease-in-out infinite alternate}
+  @keyframes sheen{0%{transform:translate(-58%,-4%)}100%{transform:translate(-42%,8%)}}
+  .panel > *{position:relative}
+  .panel h2{font-weight:800;font-size:clamp(30px,5.5vw,54px);letter-spacing:-.035em;line-height:1.04;margin-bottom:16px}
+  .panel p{color:rgba(255,255,255,.62);font-size:16px;margin-bottom:30px;max-width:42ch;margin-left:auto;margin-right:auto}
+  .cbtn{display:inline-block;background:var(--bg);color:var(--fg);font-weight:700;font-size:15px;padding:14px 30px;border-radius:12px;transition:transform .25s var(--ease)}
+  .cbtn:hover{transform:translateY(-2px)}
+  .clinks{margin-top:26px;display:flex;gap:24px;justify-content:center;flex-wrap:wrap;font-size:14px}
+  .clinks a{display:inline-flex;align-items:center;gap:7px;color:rgba(255,255,255,.62);transition:color .25s var(--ease)}
+  .clinks a svg{width:15px;height:15px;flex-shrink:0}
+  .clinks a:hover{color:#fff}
+
+  footer{padding:24px 0 44px}
+  .foot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:12.5px;color:var(--faint)}
+  .foot a:hover{color:var(--fg)}
+
+  /* motion */
+  .anim{opacity:0;animation:rise .85s var(--ease) forwards}
+  .a1{animation-delay:.05s}.a2{animation-delay:.16s}.a3{animation-delay:.27s}.a4{animation-delay:.38s}.a5{animation-delay:.5s}
+  @keyframes rise{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+  .photo.anim{animation:popin 1s var(--ease) .2s both}
+  @keyframes popin{from{opacity:0;transform:translateY(24px) scale(.96)}to{opacity:1;transform:none}}
+  .fade{opacity:0;transform:translateY(18px)}
+  .fade.in{opacity:1;transform:none;transition:opacity .7s var(--ease),transform .7s var(--ease)}
+  @media (prefers-reduced-motion:reduce){
+    .anim,.photo.anim,.fade{opacity:1!important;transform:none!important;animation:none!important;transition:none!important}
+    .glow,.panel .sheen,.badge .dot{animation:none!important}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap bar">
+    <span class="logo">Pranav Balachander</span>
+    <nav>
+      <a href="#work">Work</a>
+      <a href="#projects">Projects</a>
+      <a href="#research">Research</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="hero">
+    <div class="glow"></div>
+    <div class="hero-grid">
+      <div class="hero-text">
+        <h1 class="anim a2">Hey, I&rsquo;m Pranav.</h1>
+        <p class="intro anim a3">I build <b>AI/ML systems</b> and the software around them. RAG pipelines, forecasting models, production frontends. CS graduate and published <b>IEEE researcher</b>.</p>
+        <p class="meta-line anim a4">Computer Science &middot; Penn State &middot; based in <b>Pennsylvania</b></p>
+        <div class="hero-links anim a5">
+          <a class="btn primary" href="mailto:p.pranavbalachander@gmail.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m3.5 7 8.5 6 8.5-6"/></svg>Get in touch</a>
+          <a class="btn ghost" href="resume.pdf" download="Pranav-Balachander-CV.pdf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v11"/><path d="m7.5 10 4.5 4.5 4.5-4.5"/><path d="M5 20h14"/></svg>Download CV</a>
+          <a class="btn ghost" href="https://github.com/pruhnav" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.6-.3-5.3-1.3-5.3-5.8 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.4 11.4 0 0 1 6 0C16.9 5 17.9 5.3 17.9 5.3c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.5-2.7 5.5-5.3 5.8.4.4.8 1.1.8 2.2v3.2c0 .3.2.7.8.6A11.5 11.5 0 0 0 23.5 12C23.5 5.7 18.3.5 12 .5z"/></svg>GitHub</a>
+          <a class="btn ghost" href="https://www.linkedin.com/in/pranavbalachander2/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14zm1.78 13.02H3.55V9h3.57v11.45zM22.22 0H1.77C.8 0 0 .78 0 1.73v20.54C0 23.22.8 24 1.77 24h20.45c.98 0 1.78-.78 1.78-1.73V1.73C24 .78 23.2 0 22.22 0z"/></svg>LinkedIn</a>
+        </div>
+      </div>
+      <div class="hero-photo">
+        <div class="photo anim">
+          <div class="photo-ring"></div>
+          <img src="headshot.jpg" alt="Pranav Balachander" onerror="this.style.display='none';this.nextElementSibling.style.display='grid';" />
+          <div class="photo-fallback" style="display:none">PB</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="work" class="blk">
+    <div class="sec-top"><span class="num">01</span><h2>Experience</h2><span class="ln"></span></div>
+    <div class="row fade">
+      <div class="head"><span class="co">The Reasoning Company</span><span class="dt">Feb 2026 &#8594; May 2026</span></div>
+      <div class="ro">Software Engineering Intern <span class="loc">&middot; San Francisco, CA</span></div>
+      <p>Built responsive, user facing frontends in <strong>HTML, CSS and JavaScript</strong>, and developed a <strong>stock price forecasting model</strong> in Python using time series methods to predict market movements.</p>
+    </div>
+    <div class="row fade">
+      <div class="head"><span class="co">Penn State, Dept. of CS</span><span class="dt">Apr 2025 &#8594; May 2026</span></div>
+      <div class="ro">Research Assistant <span class="loc">&middot; Harrisburg, PA</span></div>
+      <p>Named author on <strong>three research papers</strong> across electricity price forecasting, Arctic mercury modeling, and pesticide resistance surveillance. Built a hybrid <strong>CNN/BiLSTM/Attention</strong> model (TensorFlow, Keras) reaching <strong>~25% lower RMSE</strong> (12.40 vs 16.49) and higher R&sup2; (0.87 vs 0.63) than the strongest baselines.</p>
+    </div>
+    <div class="row fade">
+      <div class="head"><span class="co">SBS IT Solutions</span><span class="dt">Jun 2025 &#8594; Sep 2025</span></div>
+      <div class="ro">AI/ML Intern <span class="loc">&middot; Dallas, TX</span></div>
+      <p>Built a <strong>RAG based health chatbot</strong> end to end, answering symptom questions with <strong>LangChain, OpenAI APIs</strong> and a vector database. Contributed UI for a <strong>HIPAA compliant</strong> medical app.</p>
+    </div>
+    <div class="row fade">
+      <div class="head"><span class="co">mResult Corporation</span><span class="dt">Jun 2023 &#8594; Oct 2023</span></div>
+      <div class="ro">Data &amp; Analytics Intern <span class="loc">&middot; Bangalore, India</span></div>
+      <p>Organized and analyzed large datasets with data warehousing techniques, ran cleaning and EDA in <strong>Pandas</strong>, and automated processing with <strong>Dataiku</strong> for non technical stakeholders.</p>
+    </div>
+  </section>
+
+  <section id="projects" class="blk">
+    <div class="sec-top"><span class="num">02</span><h2>Projects</h2><span class="ln"></span></div>
+    <div class="grid">
+      <a class="card fade" href="https://github.com/pruhnav" target="_blank" rel="noopener">
+        <div class="head"><h3>VALS <span class="go">&#8599;</span></h3><span class="date">2026</span></div>
+        <span class="stack">Unity &middot; C# &middot; Quest 3</span>
+        <p>Led a team of 4 to build a realtime VR label autocomplete system with a Trie based prefix search supporting full word and abbreviation matching, loading anatomy data dynamically from CSV.</p>
+      </a>
+      <a class="card fade" href="https://devpost.com/software/maargdarshak" target="_blank" rel="noopener">
+        <div class="head"><h3>Maargdarshak <span class="go">&#8599;</span></h3><span class="date">2024</span></div>
+        <span class="stack">Streamlit &middot; Python &middot; OpenAI</span>
+        <p>A guidance tool with a Streamlit interface tuned for usability and accessibility, wiring Python logic to the OpenAI API for realtime interactivity.</p>
+      </a>
+      <a class="card fade" href="https://github.com/pruhnav" target="_blank" rel="noopener">
+        <div class="head"><h3>Arctic Mercury Modeling <span class="go">&#8599;</span></h3><span class="date">2025</span></div>
+        <span class="stack">Python &middot; Quantum Chem &middot; ML</span>
+        <p>An ML assisted framework modeling mercury reduction, reemission, and diffusion across Arctic snow and ice, blending quantum chemistry and molecular dynamics with data driven models.</p>
+      </a>
+      <a class="card fade" href="https://github.com/pruhnav" target="_blank" rel="noopener">
+        <div class="head"><h3>Restaurant Management <span class="go">&#8599;</span></h3><span class="date">2023</span></div>
+        <span class="stack">PHP &middot; MySQL &middot; HTML</span>
+        <p>A dynamic order management platform with a staff interface for categories, orders, and customer records, backed by MySQL for reliable storage and retrieval.</p>
+      </a>
+    </div>
+  </section>
+
+  <section id="research" class="blk">
+    <div class="sec-top"><span class="num">03</span><h2>Research</h2><span class="ln"></span></div>
+    <div class="pub fade">
+      <span class="tag">IEEE Data Descriptions &middot; 2025</span>
+      <h3><a href="https://ieeexplore.ieee.org/document/11169754" target="_blank" rel="noopener">UniElecPrice: A Unified Cross Regional Day Ahead Electricity Price Dataset</a></h3>
+      <p>Introduced a globally unified dataset of day ahead electricity prices drawn from 40 markets across 5 continents, enabling standardized forecasting research. Developed and validated a hybrid CNN/BiLSTM/Attention model that outperformed LSTM and Transformer baselines.</p>
+      <div class="venue">Accepted, <b>IEEE Data Descriptions</b>, 2025 &middot; Two further papers pending publication</div>
+      <div class="pub-links"><a class="paperlink" href="https://ieeexplore.ieee.org/document/11169754" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6"/><path d="M20 4 10.5 13.5"/><path d="M19 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h5"/></svg>Read on IEEE Xplore</a><a class="orcid" href="https://orcid.org/0009-0000-1425-2821" target="_blank" rel="noopener"><svg viewBox="0 0 256 256" width="15" height="15" aria-hidden="true"><path fill="#A6CE39" d="M256 128c0 70.7-57.3 128-128 128S0 198.7 0 128 57.3 0 128 0s128 57.3 128 128z"/><path fill="#FFF" d="M86.3 186.2H70.9V79.1h15.4v107.1zM108.9 79.1h41.6c39.6 0 57 28.3 57 53.6 0 27.5-21.5 53.6-56.8 53.6h-41.8V79.1zm15.4 93.3h24.5c34.9 0 42.9-26.5 42.9-39.7C191.7 111.2 178 93 148 93h-23.7v79.4zM88.7 56.8c0 5.5-4.5 10.1-10.1 10.1s-10.1-4.6-10.1-10.1c0-5.6 4.5-10.1 10.1-10.1s10.1 4.6 10.1 10.1z"/></svg>View ORCID record</a></div>
+    </div>
+  </section>
+
+  <section id="skills" class="blk">
+    <div class="sec-top"><span class="num">04</span><h2>Toolkit</h2><span class="ln"></span></div>
+    <div class="skillset">
+      <div class="skillrow fade"><span class="cat">Languages</span><div class="chips"><span class="chip">Python</span><span class="chip">C++</span><span class="chip">SQL</span><span class="chip">Java</span><span class="chip">JavaScript</span><span class="chip">HTML/CSS</span><span class="chip">PHP</span><span class="chip">C#</span></div></div>
+      <div class="skillrow fade"><span class="cat">Frameworks</span><div class="chips"><span class="chip">React</span><span class="chip">Node.js</span><span class="chip">TensorFlow</span><span class="chip">Keras</span><span class="chip">PyTorch</span><span class="chip">Scikit learn</span><span class="chip">Streamlit</span><span class="chip">Flask</span></div></div>
+      <div class="skillrow fade"><span class="cat">ML / Data</span><div class="chips"><span class="chip">pandas</span><span class="chip">NumPy</span><span class="chip">Matplotlib</span><span class="chip">SHAP</span><span class="chip">XGBoost</span><span class="chip">OpenAI</span><span class="chip">LangChain</span></div></div>
+      <div class="skillrow fade"><span class="cat">Databases</span><div class="chips"><span class="chip">MySQL</span><span class="chip">PostgreSQL</span><span class="chip">SQLite</span></div></div>
+      <div class="skillrow fade"><span class="cat">Tools</span><div class="chips"><span class="chip">Git</span><span class="chip">GitHub</span><span class="chip">VS Code</span><span class="chip">Jupyter</span><span class="chip">LaTeX</span><span class="chip">Figma</span></div></div>
+    </div>
+  </section>
+
+  <section id="contact" class="contact">
+    <div class="panel fade">
+      <div class="sheen"></div>
+      <h2>Let&rsquo;s build something.</h2>
+      <p>The fastest way to reach me is email. Always happy to talk shop.</p>
+      <a class="cbtn" href="mailto:p.pranavbalachander@gmail.com">p.pranavbalachander@gmail.com</a>
+      <div class="clinks">
+        <a href="https://www.linkedin.com/in/pranavbalachander2/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14zm1.78 13.02H3.55V9h3.57v11.45zM22.22 0H1.77C.8 0 0 .78 0 1.73v20.54C0 23.22.8 24 1.77 24h20.45c.98 0 1.78-.78 1.78-1.73V1.73C24 .78 23.2 0 22.22 0z"/></svg>LinkedIn</a>
+        <a href="https://github.com/pruhnav" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.6-.3-5.3-1.3-5.3-5.8 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.4 11.4 0 0 1 6 0C16.9 5 17.9 5.3 17.9 5.3c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.5-2.7 5.5-5.3 5.8.4.4.8 1.1.8 2.2v3.2c0 .3.2.7.8.6A11.5 11.5 0 0 0 23.5 12C23.5 5.7 18.3.5 12 .5z"/></svg>GitHub</a>
+        <a href="https://orcid.org/0009-0000-1425-2821" target="_blank" rel="noopener"><svg viewBox="0 0 256 256" width="15" height="15" aria-hidden="true"><path fill="#A6CE39" d="M256 128c0 70.7-57.3 128-128 128S0 198.7 0 128 57.3 0 128 0s128 57.3 128 128z"/><path fill="#FFF" d="M86.3 186.2H70.9V79.1h15.4v107.1zM108.9 79.1h41.6c39.6 0 57 28.3 57 53.6 0 27.5-21.5 53.6-56.8 53.6h-41.8V79.1zm15.4 93.3h24.5c34.9 0 42.9-26.5 42.9-39.7C191.7 111.2 178 93 148 93h-23.7v79.4zM88.7 56.8c0 5.5-4.5 10.1-10.1 10.1s-10.1-4.6-10.1-10.1c0-5.6 4.5-10.1 10.1-10.1s10.1 4.6 10.1 10.1z"/></svg>ORCID</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="wrap">
+  <div class="foot">
+    <span>&copy; <span id="yr"></span> Pranav Balachander</span>
+    <span><a href="#">Back to top</a></span>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('yr').textContent = new Date().getFullYear();
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, {threshold:.1, rootMargin:'0px 0px -6% 0px'});
+  document.querySelectorAll('.fade').forEach(function(el,i){
+    el.style.transitionDelay = (Math.min(i,4)*0.05)+'s';
+    io.observe(el);
+  });
+</script>
+</body>
+</html>
