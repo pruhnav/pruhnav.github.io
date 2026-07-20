@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Conferences &middot; Pranav Balachander</title>
+<meta name="description" content="Conferences and research symposia Pranav Balachander has presented at, including Harvard NCRC 2026 and Penn State research events." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f7f7f5;
+    --surface:#ffffff;
+    --fg:#15151a;
+    --muted:#6a6a72;
+    --faint:#9b9ba3;
+    --line:#e9e8e3;
+    --accent:#3253e0;
+    --accent-2:#5b7bff;
+    --accent-soft:#eef1fd;
+    --sans:'Hanken Grotesk',-apple-system,BlinkMacSystemFont,sans-serif;
+    --ease:cubic-bezier(.22,.61,.36,1);
+    --shadow:0 1px 2px rgba(20,20,40,.03), 0 10px 30px -8px rgba(20,20,50,.08);
+    --max:1000px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-weight:400;line-height:1.6;-webkit-font-smoothing:antialiased;font-size:16px;letter-spacing:-.005em;overflow-x:hidden}
+  a{color:inherit;text-decoration:none}
+  ::selection{background:var(--accent);color:#fff}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 clamp(22px,5vw,48px)}
+
+  /* header */
+  header{position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--bg) 80%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+  .bar{display:flex;align-items:center;justify-content:space-between;min-height:66px;padding:8px 0}
+  .logo{display:flex;align-items:center;gap:11px;font-weight:700;font-size:15px;letter-spacing:-.01em}
+  nav{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+  nav a{font-size:14px;color:var(--muted);padding:8px 14px;border-radius:9px;transition:color .25s var(--ease),background .25s var(--ease)}
+  nav a:hover{color:var(--fg);background:rgba(0,0,0,.04)}
+  nav a.here{color:var(--fg);background:rgba(0,0,0,.045)}
+  @media(max-width:600px){nav a{padding:8px 10px;font-size:13px}}
+
+  /* page head */
+  .phead{position:relative;padding:clamp(44px,8vh,80px) 0 clamp(26px,4vh,38px)}
+  .glow{position:absolute;top:-70px;left:22%;width:520px;height:380px;max-width:90%;border-radius:50%;
+    background:radial-gradient(closest-side,rgba(50,83,224,.14),transparent 72%);
+    filter:blur(24px);pointer-events:none;z-index:0}
+  .phead > *{position:relative;z-index:1}
+  .eyebrow{display:inline-block;font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:5px 11px;border-radius:7px;margin-bottom:18px}
+  h1{font-weight:800;font-size:clamp(34px,6vw,60px);line-height:1.05;letter-spacing:-.035em;margin-bottom:16px}
+  .lede{font-size:clamp(16px,1.9vw,18.5px);color:var(--muted);max-width:56ch;line-height:1.55}
+
+  /* conference list */
+  main{padding-bottom:clamp(30px,6vh,60px)}
+  .conf{background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden;margin-bottom:clamp(20px,3.5vh,30px);
+    transition:transform .35s var(--ease),box-shadow .35s var(--ease),border-color .35s var(--ease)}
+  .conf:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:#dcdad3}
+  .shot{position:relative;display:block;width:100%;aspect-ratio:16/9;background:#eeeef1;border-bottom:1px solid var(--line)}
+  .shot img{width:100%;height:100%;object-fit:cover;display:block}
+  .shot .ph{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:20px;
+    font-size:13px;font-weight:600;letter-spacing:.02em;color:var(--faint);
+    background:linear-gradient(150deg,#f2f3f7 0%,#eceef5 100%)}
+  .cbody{padding:22px clamp(20px,3vw,28px) 26px}
+  .chead{display:flex;justify-content:space-between;align-items:baseline;gap:14px;flex-wrap:wrap}
+  .chead h2{font-weight:700;font-size:clamp(18px,2.4vw,22px);letter-spacing:-.025em;line-height:1.25}
+  .cdate{font-size:13px;color:var(--faint);white-space:nowrap;font-variant-numeric:tabular-nums}
+  .cvenue{font-size:14px;color:var(--accent);font-weight:600;margin-top:6px}
+  .cvenue .loc{color:var(--muted);font-weight:400}
+  .cbody p{font-size:14.5px;color:var(--muted);line-height:1.6;max-width:70ch;margin-top:12px}
+
+  footer{padding:24px 0 44px;border-top:1px solid var(--line);margin-top:clamp(30px,6vh,56px)}
+  .foot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:12.5px;color:var(--faint)}
+  .foot a:hover{color:var(--fg)}
+
+  /* motion */
+  .fade{opacity:0;transform:translateY(18px)}
+  .fade.in{opacity:1;transform:none;transition:opacity .7s var(--ease),transform .7s var(--ease)}
+  .anim{opacity:0;animation:rise .85s var(--ease) forwards}
+  .a1{animation-delay:.05s}.a2{animation-delay:.16s}.a3{animation-delay:.27s}
+  @keyframes rise{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion:reduce){
+    .anim,.fade{opacity:1!important;transform:none!important;animation:none!important;transition:none!important}
+    .glow{animation:none!important}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap bar">
+    <a class="logo" href="index.html">Pranav Balachander</a>
+    <nav>
+      <a href="index.html#work">Work</a>
+      <a href="index.html#projects">Projects</a>
+      <a href="index.html#research">Research</a>
+      <a class="here" href="conferences.html">Conferences</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="phead">
+    <div class="glow"></div>
+    <span class="eyebrow anim a1">Research &middot; 2025&ndash;2026</span>
+    <h1 class="anim a2">Conferences</h1>
+    <p class="lede anim a3">Symposia and research conferences where I&rsquo;ve presented work on electricity price forecasting, Arctic mercury modeling, and pesticide resistance surveillance.</p>
+  </section>
+
+  <!-- ==================================================================
+       TO ADD A PHOTO
+       Each conference below has one placeholder image. Drop your photo
+       into the /photos folder, then update the matching <img src="...">
+       to point at it. If the file is missing, the grey placeholder card
+       shows automatically, so nothing breaks in the meantime.
+
+       Recommended: landscape photos, ~1600px wide. They're cropped to a
+       16:9 frame.
+       ================================================================== -->
+
+  <article class="conf fade">
+    <div class="shot">
+      <img src="photos/ncrc-harvard-2026.jpg" alt="National Collegiate Research Conference 2026 at Harvard University"
+           onerror="this.style.display='none';this.nextElementSibling.style.display='grid';" />
+      <div class="ph" style="display:none">Photo coming soon</div>
+    </div>
+    <div class="cbody">
+      <div class="chead">
+        <h2>National Collegiate Research Conference</h2>
+        <span class="cdate">2026</span>
+      </div>
+      <div class="cvenue">Harvard University <span class="loc">&middot; Cambridge, MA</span></div>
+    </div>
+  </article>
+
+  <article class="conf fade">
+    <div class="shot">
+      <img src="photos/capstone-psu-2026.jpg" alt="Capstone Design Research Conference 2026 at Penn State"
+           onerror="this.style.display='none';this.nextElementSibling.style.display='grid';" />
+      <div class="ph" style="display:none">Photo coming soon</div>
+    </div>
+    <div class="cbody">
+      <div class="chead">
+        <h2>Capstone Design Research Conference</h2>
+        <span class="cdate">2026</span>
+      </div>
+      <div class="cvenue">Pennsylvania State University <span class="loc">&middot; Harrisburg, PA</span></div>
+    </div>
+  </article>
+
+  <article class="conf fade">
+    <div class="shot">
+      <img src="photos/undergrad-exhibition-psu-2026.jpg" alt="Undergraduate Exhibition for Research 2026 at Penn State"
+           onerror="this.style.display='none';this.nextElementSibling.style.display='grid';" />
+      <div class="ph" style="display:none">Photo coming soon</div>
+    </div>
+    <div class="cbody">
+      <div class="chead">
+        <h2>Undergraduate Exhibition for Research</h2>
+        <span class="cdate">2026</span>
+      </div>
+      <div class="cvenue">Pennsylvania State University <span class="loc">&middot; University Park, PA</span></div>
+    </div>
+  </article>
+
+  <article class="conf fade">
+    <div class="shot">
+      <img src="photos/icds-symposium-psu-2025.jpg" alt="ICDS Symposium 2025 at Penn State"
+           onerror="this.style.display='none';this.nextElementSibling.style.display='grid';" />
+      <div class="ph" style="display:none">Photo coming soon</div>
+    </div>
+    <div class="cbody">
+      <div class="chead">
+        <h2>ICDS Symposium</h2>
+        <span class="cdate">2025</span>
+      </div>
+      <div class="cvenue">Pennsylvania State University <span class="loc">&middot; University Park, PA</span></div>
+    </div>
+  </article>
+
+</main>
+
+<footer class="wrap">
+  <div class="foot">
+    <span>&copy; <span id="yr"></span> Pranav Balachander</span>
+    <span><a href="index.html">Back to home</a></span>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('yr').textContent = new Date().getFullYear();
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, {threshold:.08, rootMargin:'0px 0px -5% 0px'});
+  document.querySelectorAll('.fade').forEach(function(el,i){
+    el.style.transitionDelay = (Math.min(i,4)*0.05)+'s';
+    io.observe(el);
+  });
+</script>
+</body>
+</html>
