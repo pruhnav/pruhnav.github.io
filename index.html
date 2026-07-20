@@ -34,10 +34,10 @@
 
   /* header */
   header{position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--bg) 80%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
-  .bar{display:flex;align-items:center;justify-content:space-between;height:66px}
+  .bar{display:flex;align-items:center;justify-content:space-between;min-height:66px;padding:8px 0}
   .logo{display:flex;align-items:center;gap:11px;font-weight:700;font-size:15px;letter-spacing:-.01em}
   .mono{width:30px;height:30px;border-radius:9px;background:var(--fg);color:var(--bg);display:grid;place-items:center;font-size:13px;font-weight:700;letter-spacing:-.02em}
-  nav{display:flex;gap:6px}
+  nav{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
   nav a{font-size:14px;color:var(--muted);padding:8px 14px;border-radius:9px;transition:color .25s var(--ease),background .25s var(--ease)}
   nav a:hover{color:var(--fg);background:rgba(0,0,0,.04)}
   @media(max-width:600px){nav a{padding:8px 10px;font-size:13px}}
@@ -94,6 +94,9 @@
   .row .ro .loc{color:var(--muted);font-weight:400}
   .row p{font-size:14.5px;color:var(--muted);line-height:1.6;max-width:70ch}
   .row p strong{color:var(--fg);font-weight:600}
+  .rosterlink{display:inline-flex;align-items:center;gap:8px;font-size:13.5px;font-weight:600;color:#fff;background:#041E42;border:1px solid #041E42;padding:9px 15px;border-radius:10px;margin-top:14px;transition:transform .25s var(--ease),box-shadow .25s var(--ease)}
+  .rosterlink:hover{transform:translateY(-2px);box-shadow:0 10px 22px -10px rgba(4,30,66,.6)}
+  .rosterlink svg{width:16px;height:16px;flex-shrink:0}
 
   /* projects */
   .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
@@ -176,11 +179,12 @@
 
 <header>
   <div class="wrap bar">
-    <span class="logo">Pranav Balachander</span>
+    <a class="logo" href="index.html">Pranav Balachander</a>
     <nav>
       <a href="#work">Work</a>
       <a href="#projects">Projects</a>
       <a href="#research">Research</a>
+      <a href="conferences.html">Conferences</a>
       <a href="#contact">Contact</a>
     </nav>
   </div>
@@ -228,6 +232,15 @@
       <div class="head"><span class="co">SBS IT Solutions</span><span class="dt">Jun 2025 &#8594; Sep 2025</span></div>
       <div class="ro">AI/ML Intern <span class="loc">&middot; Dallas, TX</span></div>
       <p>Built a <strong>RAG based health chatbot</strong> end to end, answering symptom questions with <strong>LangChain, OpenAI APIs</strong> and a vector database. Contributed UI for a <strong>HIPAA compliant</strong> medical app.</p>
+    </div>
+    <div class="row fade">
+      <div class="head"><span class="co">Penn State Harrisburg Athletics</span><span class="dt">2025 &#8594; 2026</span></div>
+      <div class="ro">Men&rsquo;s Track &amp; Field <span class="loc">&middot; NCAA Division III, United East</span></div>
+      <p>Student athlete on the varsity roster, training and competing alongside a full course load and research work.</p>
+      <a class="rosterlink" href="https://psuharrisburgsports.com/sports/mens-track-and-field/roster/pranav-balachander/4383" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.6c-1.9 1.5-4.4 2.4-7.1 2.4h-.7v7c0 4.2 3.2 8 7.8 9.4 4.6-1.4 7.8-5.2 7.8-9.4V5h-.7c-2.7 0-5.2-.9-7.1-2.4zM8.1 9.4h1.7v2.1h4.4V9.4h1.7v7.2h-1.7v-2.3H9.8v2.3H8.1V9.4z"/></svg>
+        Roster
+      </a>
     </div>
     <div class="row fade">
       <div class="head"><span class="co">mResult Corporation</span><span class="dt">Jun 2023 &#8594; Oct 2023</span></div>
