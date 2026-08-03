@@ -42,14 +42,25 @@
   nav a:hover{color:var(--fg);background:rgba(0,0,0,.04)}
   @media(max-width:600px){nav a{padding:8px 10px;font-size:13px}}
 
-  /* hero */
-  .hero{position:relative;padding:clamp(52px,11vh,108px) 0 clamp(48px,8vh,80px)}
-  .glow{position:absolute;top:-60px;left:30%;width:560px;height:420px;max-width:90%;border-radius:50%;
-    background:radial-gradient(closest-side,rgba(50,83,224,.16),transparent 72%);
+  /* hero with banner */
+  .hero{position:relative;padding:0 0 clamp(40px,6vh,64px)}
+  .banner{position:relative;height:clamp(150px,26vw,240px);border-radius:0 0 22px 22px;overflow:hidden;background:#e7e9ef;border:1px solid var(--line);border-top:none;
+    margin-left:calc(-1 * clamp(22px,5vw,48px));margin-right:calc(-1 * clamp(22px,5vw,48px))}
+  .banner img{width:100%;height:100%;object-fit:cover;display:block}
+  .banner-fallback{position:absolute;inset:0;background:
+    linear-gradient(120deg,#eef2fb 0%,#e2e9f7 50%,#d6e0f2 100%)}
+  .hero-top{display:flex;align-items:flex-end;gap:22px;margin-top:-52px;padding:0 4px;position:relative;z-index:2}
+  @media(max-width:640px){.hero-top{gap:16px;margin-top:-44px}}
+  .avatar{width:clamp(96px,17vw,128px);height:clamp(96px,17vw,128px);border-radius:50%;overflow:hidden;flex-shrink:0;
+    border:5px solid var(--bg);background:var(--surface);box-shadow:0 10px 30px -12px rgba(20,30,80,.3)}
+  .avatar img{width:100%;height:100%;object-fit:cover;display:block}
+  .avatar-fallback{width:100%;height:100%;display:grid;place-items:center;font-size:clamp(34px,7vw,46px);font-weight:800;letter-spacing:-.03em;color:#fff;
+    background:linear-gradient(150deg,var(--accent) 0%,var(--accent-2) 60%,#8aa0ff 100%)}
+  .hero-body{padding:clamp(20px,3.5vh,30px) 4px 0}
+  .glow{position:absolute;top:60px;left:36%;width:520px;height:360px;max-width:80%;border-radius:50%;
+    background:radial-gradient(closest-side,rgba(50,83,224,.12),transparent 72%);
     filter:blur(24px);pointer-events:none;z-index:0;animation:drift 16s ease-in-out infinite alternate}
   @keyframes drift{0%{transform:translate(-24px,-12px) scale(1)}100%{transform:translate(40px,26px) scale(1.12)}}
-  .hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:1fr 270px;gap:clamp(28px,5vw,56px);align-items:center}
-  @media(max-width:780px){.hero-grid{grid-template-columns:1fr;gap:32px}}
 
   .badge{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:500;color:var(--muted);background:var(--surface);border:1px solid var(--line);padding:7px 14px;border-radius:100px;margin-bottom:clamp(20px,4vh,30px);box-shadow:var(--shadow)}
   .badge .dot{width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 3px rgba(34,197,94,.18);animation:blip 2.6s infinite}
@@ -67,16 +78,6 @@
   .btn.ghost{background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow)}
   .btn.ghost:hover{transform:translateY(-2px);border-color:#d7d5cf}
 
-  /* photo */
-  .hero-photo{justify-self:center}
-  @media(max-width:780px){.hero-photo{justify-self:start}}
-  .photo{position:relative;width:clamp(180px,40vw,250px);aspect-ratio:4/5;border-radius:22px;overflow:hidden;box-shadow:0 20px 50px -18px rgba(20,30,80,.34);border:5px solid var(--surface)}
-  .photo::after{content:"";position:absolute;inset:0;border-radius:18px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.05);pointer-events:none}
-  .photo img{width:100%;height:100%;object-fit:cover;display:block}
-  .photo-fallback{position:absolute;inset:0;display:grid;place-items:center;font-size:64px;font-weight:800;letter-spacing:-.04em;color:#fff;
-    background:linear-gradient(150deg,var(--accent) 0%,var(--accent-2) 60%,#8aa0ff 100%)}
-  .photo-ring{position:absolute;inset:-14px;border-radius:30px;border:1px solid var(--line);z-index:-1}
-
   /* section frame */
   section.blk{padding:clamp(46px,7vh,70px) 0}
   .sec-top{display:flex;align-items:center;gap:12px;margin-bottom:clamp(24px,4vh,34px)}
@@ -84,19 +85,46 @@
   .sec-top h2{font-size:14px;font-weight:600;letter-spacing:.02em;color:var(--muted)}
   .sec-top .ln{flex:1;height:1px;background:var(--line)}
 
-  /* work */
-  .row{display:block;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:22px 24px;margin-bottom:12px;transition:transform .35s var(--ease),box-shadow .35s var(--ease),border-color .35s var(--ease)}
-  .row:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:#dcdad3}
-  .row .head{display:flex;justify-content:space-between;align-items:baseline;gap:14px;flex-wrap:wrap}
-  .row .co{font-weight:700;font-size:18px;letter-spacing:-.02em}
-  .row .dt{font-size:13px;color:var(--faint);white-space:nowrap;font-variant-numeric:tabular-nums}
-  .row .ro{font-size:14px;color:var(--accent);font-weight:600;margin:4px 0 12px}
+  /* work — collapsible cards */
+  .row{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px 20px;margin-bottom:12px;transition:box-shadow .3s var(--ease),border-color .3s var(--ease)}
+  .row:hover{border-color:#dcdad3}
+  .row.open{box-shadow:var(--shadow);border-color:#d3d1cb}
+  .row-head{display:flex;gap:15px;align-items:center;cursor:pointer;user-select:none}
+  .logo-slot{width:50px;height:50px;border-radius:12px;background:#f4f4f0;border:1px solid var(--line);flex-shrink:0;display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .logo-slot img{width:100%;height:100%;object-fit:contain;padding:7px}
+  .logo-slot .mono-fb{font-size:16px;font-weight:700;color:var(--muted);letter-spacing:-.02em}
+  .row-main{flex:1;min-width:0}
+  .row-l1{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+  .row .co{font-weight:700;font-size:16.5px;letter-spacing:-.02em}
+  .row-r{display:flex;align-items:center;gap:9px;flex-shrink:0}
+  .row .dt{font-size:12.5px;color:var(--faint);white-space:nowrap;font-variant-numeric:tabular-nums}
+  .chev{color:#b9b9b1;font-size:15px;transition:transform .3s var(--ease);flex-shrink:0}
+  .row.open .chev{transform:rotate(180deg)}
+  .row-l2{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-top:2px}
+  .row .ro{font-size:13.5px;color:var(--accent);font-weight:600}
   .row .ro .loc{color:var(--muted);font-weight:400}
-  .row p{font-size:14.5px;color:var(--muted);line-height:1.6;max-width:70ch}
-  .row p strong{color:var(--fg);font-weight:600}
-  .rosterlink{display:inline-flex;align-items:center;gap:8px;font-size:13.5px;font-weight:600;color:#fff;background:#041E42;border:1px solid #041E42;padding:9px 15px;border-radius:10px;margin-top:14px;transition:transform .25s var(--ease),box-shadow .25s var(--ease)}
+  .row .loc-r{font-size:12.5px;color:var(--faint);white-space:nowrap}
+  .row-body{max-height:0;overflow:hidden;transition:max-height .34s var(--ease)}
+  .row-inner{padding-top:15px}
+  .row ul{list-style:none;padding:0;margin:0}
+  .row li{font-size:13.5px;color:var(--muted);line-height:1.55;padding-left:16px;position:relative;margin-bottom:8px}
+  .row li:last-child{margin-bottom:0}
+  .row li::before{content:"";position:absolute;left:2px;top:8px;width:4px;height:4px;border-radius:50%;background:#c6c6bd}
+  .row li strong{color:var(--fg);font-weight:600}
+  .row .tags{display:flex;flex-wrap:wrap;gap:5px 14px;margin-top:14px;padding-top:13px;border-top:1px solid #f0f0ec}
+  .row .tags span{font-size:12px;color:#6c6c73;font-weight:500}
+  .rosterlink{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#fff;background:#041E42;border:1px solid #041E42;padding:9px 15px;border-radius:10px;margin-top:14px;transition:transform .25s var(--ease),box-shadow .25s var(--ease)}
   .rosterlink:hover{transform:translateY(-2px);box-shadow:0 10px 22px -10px rgba(4,30,66,.6)}
   .rosterlink svg{width:16px;height:16px;flex-shrink:0}
+
+  /* athletics strip */
+  .athletics{display:flex;align-items:center;gap:16px;flex-wrap:wrap;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 20px;margin-top:4px}
+  .athletics .ath-ico{width:38px;height:38px;border-radius:10px;background:#eef1fd;color:var(--accent);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .athletics .ath-ico svg{width:20px;height:20px}
+  .athletics .ath-txt{flex:1;min-width:180px}
+  .athletics .ath-txt .t1{font-weight:700;font-size:15px;letter-spacing:-.01em}
+  .athletics .ath-txt .t2{font-size:13px;color:var(--muted);margin-top:1px}
+  .athletics .rosterlink{margin-top:0}
 
   /* projects */
   .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
@@ -132,6 +160,16 @@
   .clinks a.oc{display:inline-flex;align-items:center;gap:7px}
 
   /* skills */
+  /* skills icon grid */
+  .skillgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px}
+  .skill{display:flex;flex-direction:column;align-items:center;gap:9px;background:var(--surface);border:1px solid var(--line);border-radius:13px;padding:16px 10px;transition:border-color .25s var(--ease),transform .25s var(--ease)}
+  .skill:hover{border-color:#cdd6f3;transform:translateY(-3px)}
+  .skill img{width:30px;height:30px;object-fit:contain;filter:grayscale(1);opacity:.62;transition:filter .25s var(--ease),opacity .25s var(--ease)}
+  .skill:hover img{filter:grayscale(0);opacity:1}
+  .skill .fb{width:30px;height:30px;display:none;align-items:center;justify-content:center;font-weight:700;font-size:15px;color:var(--muted)}
+  .skill span{font-size:12px;color:var(--muted);font-weight:500;text-align:center;line-height:1.2}
+  .skillcat{font-size:12px;font-weight:700;color:var(--faint);letter-spacing:.05em;text-transform:uppercase;margin:26px 0 12px}
+  .skillcat:first-child{margin-top:0}
   .skillset{display:flex;flex-direction:column;gap:18px}
   .skillrow{display:grid;grid-template-columns:118px 1fr;gap:18px;align-items:start}
   @media(max-width:560px){.skillrow{grid-template-columns:1fr;gap:8px}}
@@ -165,12 +203,10 @@
   .anim{opacity:0;animation:rise .85s var(--ease) forwards}
   .a1{animation-delay:.05s}.a2{animation-delay:.16s}.a3{animation-delay:.27s}.a4{animation-delay:.38s}.a5{animation-delay:.5s}
   @keyframes rise{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
-  .photo.anim{animation:popin 1s var(--ease) .2s both}
-  @keyframes popin{from{opacity:0;transform:translateY(24px) scale(.96)}to{opacity:1;transform:none}}
   .fade{opacity:0;transform:translateY(18px)}
   .fade.in{opacity:1;transform:none;transition:opacity .7s var(--ease),transform .7s var(--ease)}
   @media (prefers-reduced-motion:reduce){
-    .anim,.photo.anim,.fade{opacity:1!important;transform:none!important;animation:none!important;transition:none!important}
+    .anim,.fade{opacity:1!important;transform:none!important;animation:none!important;transition:none!important}
     .glow,.panel .sheen,.badge .dot{animation:none!important}
   }
 </style>
@@ -193,25 +229,26 @@
 <main class="wrap">
 
   <section class="hero">
-    <div class="glow"></div>
-    <div class="hero-grid">
-      <div class="hero-text">
-        <h1 class="anim a2">Hey, I&rsquo;m Pranav.</h1>
-        <p class="intro anim a3">I build <b>AI/ML systems</b> and the software around them. RAG pipelines, forecasting models, production frontends. CS graduate and published <b>IEEE researcher</b>.</p>
-        <p class="meta-line anim a4">Computer Science &middot; Penn State &middot; based in <b>California</b></p>
-        <div class="hero-links anim a5">
-          <a class="btn primary" href="mailto:p.pranavbalachander@gmail.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m3.5 7 8.5 6 8.5-6"/></svg>Get in touch</a>
-          <a class="btn ghost" href="resume.pdf" download="Pranav-Balachander-CV.pdf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v11"/><path d="m7.5 10 4.5 4.5 4.5-4.5"/><path d="M5 20h14"/></svg>Download CV</a>
-          <a class="btn ghost" href="https://github.com/pruhnav" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.6-.3-5.3-1.3-5.3-5.8 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.4 11.4 0 0 1 6 0C16.9 5 17.9 5.3 17.9 5.3c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.5-2.7 5.5-5.3 5.8.4.4.8 1.1.8 2.2v3.2c0 .3.2.7.8.6A11.5 11.5 0 0 0 23.5 12C23.5 5.7 18.3.5 12 .5z"/></svg>GitHub</a>
-          <a class="btn ghost" href="https://www.linkedin.com/in/pranavbalachander2/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14zm1.78 13.02H3.55V9h3.57v11.45zM22.22 0H1.77C.8 0 0 .78 0 1.73v20.54C0 23.22.8 24 1.77 24h20.45c.98 0 1.78-.78 1.78-1.73V1.73C24 .78 23.2 0 22.22 0z"/></svg>LinkedIn</a>
-        </div>
+    <div class="banner">
+      <img src="banner.jpg" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" />
+      <div class="banner-fallback" style="display:none"></div>
+    </div>
+    <div class="hero-top">
+      <div class="avatar">
+        <img src="headshot.jpg" alt="Pranav Balachander" onerror="this.style.display='none';this.nextElementSibling.style.display='grid';" />
+        <div class="avatar-fallback" style="display:none">PB</div>
       </div>
-      <div class="hero-photo">
-        <div class="photo anim">
-          <div class="photo-ring"></div>
-          <img src="headshot.jpg" alt="Pranav Balachander" onerror="this.style.display='none';this.nextElementSibling.style.display='grid';" />
-          <div class="photo-fallback" style="display:none">PB</div>
-        </div>
+    </div>
+    <div class="hero-body">
+      <div class="glow"></div>
+      <h1 class="anim a2">Hey, I&rsquo;m Pranav.</h1>
+      <p class="intro anim a3">I build <b>AI/ML systems</b> and the software around them. RAG pipelines, forecasting models, production frontends. CS graduate and published <b>IEEE researcher</b>.</p>
+      <p class="meta-line anim a4">Computer Science &middot; Penn State &middot; based in <b>California</b></p>
+      <div class="hero-links anim a5">
+        <a class="btn primary" href="mailto:p.pranavbalachander@gmail.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m3.5 7 8.5 6 8.5-6"/></svg>Get in touch</a>
+        <a class="btn ghost" href="resume.pdf" download="Pranav-Balachander-CV.pdf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v11"/><path d="m7.5 10 4.5 4.5 4.5-4.5"/><path d="M5 20h14"/></svg>Download CV</a>
+        <a class="btn ghost" href="https://github.com/pruhnav" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.6-.3-5.3-1.3-5.3-5.8 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.4 11.4 0 0 1 6 0C16.9 5 17.9 5.3 17.9 5.3c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.5-2.7 5.5-5.3 5.8.4.4.8 1.1.8 2.2v3.2c0 .3.2.7.8.6A11.5 11.5 0 0 0 23.5 12C23.5 5.7 18.3.5 12 .5z"/></svg>GitHub</a>
+        <a class="btn ghost" href="https://www.linkedin.com/in/pranavbalachander2/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14zm1.78 13.02H3.55V9h3.57v11.45zM22.22 0H1.77C.8 0 0 .78 0 1.73v20.54C0 23.22.8 24 1.77 24h20.45c.98 0 1.78-.78 1.78-1.73V1.73C24 .78 23.2 0 22.22 0z"/></svg>LinkedIn</a>
       </div>
     </div>
   </section>
@@ -219,39 +256,99 @@
   <section id="work" class="blk">
     <div class="sec-top"><span class="num">01</span><h2>Experience</h2><span class="ln"></span></div>
     <div class="row fade">
-      <div class="head"><span class="co">The Reasoning Company</span><span class="dt">Feb 2026 &#8594; May 2026</span></div>
-      <div class="ro">Software Engineering Intern <span class="loc">&middot; San Francisco, CA</span></div>
-      <p>Built responsive, user facing frontends in <strong>HTML, CSS and JavaScript</strong>, and developed a <strong>stock price forecasting model</strong> in Python using time series methods to predict market movements.</p>
+      <div class="row-head">
+        <div class="logo-slot"><img src="experience-logos/reasoning.png" alt="The Reasoning Company logo" onerror="this.style.display='none';this.parentNode.querySelector('.mono-fb').style.display='block';"><span class="mono-fb" style="display:none">TR</span></div>
+        <div class="row-main">
+          <div class="row-l1"><span class="co">The Reasoning Company</span><span class="row-r"><span class="dt">Feb 2026 &rarr; May 2026</span><i class="chev">&#9662;</i></span></div>
+          <div class="row-l2"><span class="ro">Software Engineering Intern</span><span class="loc-r">San Francisco, CA</span></div>
+        </div>
+      </div>
+      <div class="row-body"><div class="row-inner">
+        <ul>
+          <li>Built responsive, user-facing frontends in <strong>HTML, CSS, and JavaScript</strong> for production applications.</li>
+          <li>Developed a <strong>stock price forecasting model</strong> in Python using time-series methods to predict market movements.</li>
+        </ul>
+        <div class="tags"><span>JavaScript</span><span>HTML/CSS</span><span>Python</span><span>Time-series</span></div>
+      </div></div>
     </div>
+
     <div class="row fade">
-      <div class="head"><span class="co">Penn State, Dept. of CS</span><span class="dt">Apr 2025 &#8594; May 2026</span></div>
-      <div class="ro">Research Assistant <span class="loc">&middot; Harrisburg, PA</span></div>
-      <p>Named author on <strong>three research papers</strong> across electricity price forecasting, Arctic mercury modeling, and pesticide resistance surveillance. Built a hybrid <strong>CNN/BiLSTM/Attention</strong> model (TensorFlow, Keras) reaching <strong>~25% lower RMSE</strong> (12.40 vs 16.49) and higher R&sup2; (0.87 vs 0.63) than the strongest baselines.</p>
+      <div class="row-head">
+        <div class="logo-slot"><img src="experience-logos/psu.png" alt="Penn State logo" onerror="this.style.display='none';this.parentNode.querySelector('.mono-fb').style.display='block';"><span class="mono-fb" style="display:none">PS</span></div>
+        <div class="row-main">
+          <div class="row-l1"><span class="co">Penn State, Dept. of CS</span><span class="row-r"><span class="dt">Apr 2025 &rarr; May 2026</span><i class="chev">&#9662;</i></span></div>
+          <div class="row-l2"><span class="ro">Research Assistant</span><span class="loc-r">Harrisburg, PA</span></div>
+        </div>
+      </div>
+      <div class="row-body"><div class="row-inner">
+        <ul>
+          <li>Engineered a hybrid <strong>CNN&ndash;BiLSTM&ndash;Attention</strong> forecasting model in Python (TensorFlow, Keras) that cut RMSE ~25% (12.40 vs 16.49) and raised R&sup2; to 0.87 (from 0.63) against the strongest baselines on real-world electricity-price data.</li>
+          <li>Built end-to-end ML data pipelines fusing quantum-chemistry, epidemiological, and genomic datasets into unified spatiotemporal models using Python, Pandas, NumPy, and Scikit-learn.</li>
+          <li>Published a peer-reviewed paper in <strong>IEEE Data Descriptions</strong> (2025), curating a standardized dataset spanning 40 markets across 5 continents.</li>
+        </ul>
+        <div class="tags"><span>TensorFlow</span><span>Keras</span><span>Python</span><span>Pandas</span><span>Scikit-learn</span></div>
+      </div></div>
     </div>
+
     <div class="row fade">
-      <div class="head"><span class="co">SBS IT Solutions</span><span class="dt">Jun 2025 &#8594; Sep 2025</span></div>
-      <div class="ro">AI/ML Intern <span class="loc">&middot; Dallas, TX</span></div>
-      <p>Built a <strong>RAG based health chatbot</strong> end to end, answering symptom questions with <strong>LangChain, OpenAI APIs</strong> and a vector database. Contributed UI for a <strong>HIPAA compliant</strong> medical app.</p>
+      <div class="row-head">
+        <div class="logo-slot"><img src="experience-logos/sbs.png" alt="SBS IT Solutions logo" onerror="this.style.display='none';this.parentNode.querySelector('.mono-fb').style.display='block';"><span class="mono-fb" style="display:none">SB</span></div>
+        <div class="row-main">
+          <div class="row-l1"><span class="co">SBS IT Solutions</span><span class="row-r"><span class="dt">Jun 2025 &rarr; Sep 2025</span><i class="chev">&#9662;</i></span></div>
+          <div class="row-l2"><span class="ro">AI/ML Intern</span><span class="loc-r">Dallas, TX &middot; Remote</span></div>
+        </div>
+      </div>
+      <div class="row-body"><div class="row-inner">
+        <ul>
+          <li>Built a <strong>RAG-based AI health chatbot</strong> end-to-end with a team (frontend and backend) using LangChain, OpenAI APIs, and a vector database to answer user symptom questions with retrieval-grounded responses.</li>
+          <li>Applied prompt engineering, embeddings, and vector search to improve answer relevance and reduce hallucinated responses in the end-to-end system.</li>
+          <li>Developed and tested frontend interfaces for a <strong>HIPAA-compliant</strong> medical application alongside the engineering team.</li>
+        </ul>
+        <div class="tags"><span>LangChain</span><span>OpenAI</span><span>RAG</span><span>Vector search</span></div>
+      </div></div>
     </div>
+
     <div class="row fade">
-      <div class="head"><span class="co">Penn State Harrisburg Athletics</span><span class="dt">2025 &#8594; 2026</span></div>
-      <div class="ro">Men&rsquo;s Track &amp; Field <span class="loc">&middot; NCAA Division III, United East</span></div>
-      <p>Student athlete on the varsity roster, training and competing alongside a full course load and research work.</p>
+      <div class="row-head">
+        <div class="logo-slot"><img src="experience-logos/mresult.png" alt="mResult Corporation logo" onerror="this.style.display='none';this.parentNode.querySelector('.mono-fb').style.display='block';"><span class="mono-fb" style="display:none">mR</span></div>
+        <div class="row-main">
+          <div class="row-l1"><span class="co">mResult Corporation</span><span class="row-r"><span class="dt">Jun 2023 &rarr; Oct 2023</span><i class="chev">&#9662;</i></span></div>
+          <div class="row-l2"><span class="ro">Data &amp; Analytics Intern</span><span class="loc-r">Bangalore, India</span></div>
+        </div>
+      </div>
+      <div class="row-body"><div class="row-inner">
+        <ul>
+          <li>Built and automated data-processing pipelines over large datasets using Python, Pandas, and Dataiku, applying data-warehousing and ETL techniques for downstream analytics.</li>
+          <li>Wrote SQL queries and cleaned, transformed, and validated large datasets to prepare reliable inputs for analysis.</li>
+          <li>Shipped dashboards that translated analytics into decisions for non-technical stakeholders across teams.</li>
+        </ul>
+        <div class="tags"><span>Python</span><span>Pandas</span><span>SQL</span><span>Dataiku</span><span>ETL</span></div>
+      </div></div>
+    </div>
+  </section>
+
+  <section class="blk" style="padding-top:0">
+    <div class="athletics fade">
+      <div class="ath-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2.4"/><path d="M8 22l2.5-6 2-2.5"/><path d="M6 12l3.5-2.5 3 1 3 3.5"/><path d="M14.5 22l-1-5"/></svg></div>
+      <div class="ath-txt">
+        <div class="t1">Men&rsquo;s Track &amp; Field &middot; Penn State Harrisburg</div>
+        <div class="t2">NCAA Division III varsity athlete, competing alongside a full course load and research.</div>
+      </div>
       <a class="rosterlink" href="https://psuharrisburgsports.com/sports/mens-track-and-field/roster/pranav-balachander/4383" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.6c-1.9 1.5-4.4 2.4-7.1 2.4h-.7v7c0 4.2 3.2 8 7.8 9.4 4.6-1.4 7.8-5.2 7.8-9.4V5h-.7c-2.7 0-5.2-.9-7.1-2.4zM8.1 9.4h1.7v2.1h4.4V9.4h1.7v7.2h-1.7v-2.3H9.8v2.3H8.1V9.4z"/></svg>
         Roster
       </a>
-    </div>
-    <div class="row fade">
-      <div class="head"><span class="co">mResult Corporation</span><span class="dt">Jun 2023 &#8594; Oct 2023</span></div>
-      <div class="ro">Data &amp; Analytics Intern <span class="loc">&middot; Bangalore, India</span></div>
-      <p>Organized and analyzed large datasets with data warehousing techniques, ran cleaning and EDA in <strong>Pandas</strong>, and automated processing with <strong>Dataiku</strong> for non technical stakeholders.</p>
     </div>
   </section>
 
   <section id="projects" class="blk">
     <div class="sec-top"><span class="num">02</span><h2>Projects</h2><span class="ln"></span></div>
     <div class="grid">
+      <a class="card fade" href="#" onclick="return false;">
+        <div class="head"><h3>Commutr</h3><span class="date">2025 &ndash; Present</span></div>
+        <span class="stack">Figma &middot; Product &middot; UX Research</span>
+        <p>Founded a student commuting platform connecting off campus students with student drivers through schedule based rides, leading product design, user research, and development. Ran surveys on commuting habits, designed the end to end product in Figma from wireframes to interactive prototypes, and scoped a 150&ndash;300 rider pilot with subscription based revenue projections.</p>
+      </a>
       <a class="card fade" href="https://github.com/pruhnav" target="_blank" rel="noopener">
         <div class="head"><h3>VALS <span class="go">&#8599;</span></h3><span class="date">2026</span></div>
         <span class="stack">Unity &middot; C# &middot; Quest 3</span>
@@ -288,13 +385,18 @@
 
   <section id="skills" class="blk">
     <div class="sec-top"><span class="num">04</span><h2>Toolkit</h2><span class="ln"></span></div>
-    <div class="skillset">
-      <div class="skillrow fade"><span class="cat">Languages</span><div class="chips"><span class="chip">Python</span><span class="chip">C++</span><span class="chip">SQL</span><span class="chip">Java</span><span class="chip">JavaScript</span><span class="chip">HTML/CSS</span><span class="chip">PHP</span><span class="chip">C#</span></div></div>
-      <div class="skillrow fade"><span class="cat">Frameworks</span><div class="chips"><span class="chip">React</span><span class="chip">Node.js</span><span class="chip">TensorFlow</span><span class="chip">Keras</span><span class="chip">PyTorch</span><span class="chip">Scikit learn</span><span class="chip">Streamlit</span><span class="chip">Flask</span></div></div>
-      <div class="skillrow fade"><span class="cat">ML / Data</span><div class="chips"><span class="chip">pandas</span><span class="chip">NumPy</span><span class="chip">Matplotlib</span><span class="chip">SHAP</span><span class="chip">XGBoost</span><span class="chip">OpenAI</span><span class="chip">LangChain</span></div></div>
-      <div class="skillrow fade"><span class="cat">Databases</span><div class="chips"><span class="chip">MySQL</span><span class="chip">PostgreSQL</span><span class="chip">SQLite</span></div></div>
-      <div class="skillrow fade"><span class="cat">Tools</span><div class="chips"><span class="chip">Git</span><span class="chip">GitHub</span><span class="chip">VS Code</span><span class="chip">Jupyter</span><span class="chip">LaTeX</span><span class="chip">Figma</span></div></div>
-    </div>
+
+    <div class="skillcat fade">Languages</div>
+    <div class="skillgrid fade" id="sg-lang"></div>
+
+    <div class="skillcat fade">ML &amp; AI</div>
+    <div class="skillgrid fade" id="sg-ml"></div>
+
+    <div class="skillcat fade">Frameworks &amp; Data</div>
+    <div class="skillgrid fade" id="sg-fw"></div>
+
+    <div class="skillcat fade">Databases &amp; Tools</div>
+    <div class="skillgrid fade" id="sg-tools"></div>
   </section>
 
   <section id="contact" class="contact">
@@ -321,7 +423,63 @@
 </footer>
 
 <script>
+  var skills = {
+    'sg-lang': [
+      ['Python','python'],['C++','cplusplus'],['SQL','mysql'],['Java',null],
+      ['JavaScript','javascript'],['HTML/CSS','html5'],['PHP','php'],['C#',null]
+    ],
+    'sg-ml': [
+      ['TensorFlow','tensorflow'],['Keras','keras'],['PyTorch','pytorch'],
+      ['scikit-learn','scikitlearn'],['XGBoost',null],['SHAP',null],
+      ['OpenAI','openai'],['LangChain','langchain']
+    ],
+    'sg-fw': [
+      ['React','react'],['Node.js','nodedotjs'],['Flask','flask'],['Streamlit','streamlit'],
+      ['pandas','pandas'],['NumPy','numpy'],['Matplotlib',null]
+    ],
+    'sg-tools': [
+      ['MySQL','mysql'],['PostgreSQL','postgresql'],['SQLite','sqlite'],
+      ['Git','git'],['GitHub','github'],['VS Code',null],['Figma','figma'],['LaTeX','latex']
+    ]
+  };
+  function initial(name){ return name.replace(/[^A-Za-z0-9]/g,'').slice(0,2); }
+  Object.keys(skills).forEach(function(id){
+    var host = document.getElementById(id);
+    if(!host) return;
+    skills[id].forEach(function(s){
+      var name = s[0], slug = s[1];
+      var tile = document.createElement('div');
+      tile.className = 'skill';
+      var iconHtml = slug
+        ? '<img src="https://cdn.simpleicons.org/'+slug+'" alt="'+name+' logo" loading="lazy" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\';"><span class="fb">'+initial(name)+'</span>'
+        : '<span class="fb" style="display:flex">'+initial(name)+'</span>';
+      tile.innerHTML = iconHtml + '<span>'+name+'</span>';
+      host.appendChild(tile);
+    });
+  });
+
   document.getElementById('yr').textContent = new Date().getFullYear();
+
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll('#work .row').forEach(function(row){
+    var head = row.querySelector('.row-head');
+    var body = row.querySelector('.row-body');
+    var chev = row.querySelector('.chev');
+    if(reduce){ body.style.maxHeight = 'none'; row.classList.add('open'); return; }
+    head.setAttribute('role','button');
+    head.setAttribute('tabindex','0');
+    head.setAttribute('aria-expanded','false');
+    function toggle(){
+      var open = row.classList.toggle('open');
+      body.style.maxHeight = open ? body.scrollHeight + 'px' : '0px';
+      head.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if(open){ setTimeout(function(){ if(row.classList.contains('open')) body.style.maxHeight = 'none'; }, 360); }
+      else { body.style.maxHeight = body.scrollHeight + 'px'; requestAnimationFrame(function(){ body.style.maxHeight = '0px'; }); }
+    }
+    head.addEventListener('click', toggle);
+    head.addEventListener('keydown', function(e){ if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); toggle(); } });
+  });
+
   var io = new IntersectionObserver(function(es){
     es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
   }, {threshold:.1, rootMargin:'0px 0px -6% 0px'});

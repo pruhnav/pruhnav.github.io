@@ -1,0 +1,14 @@
+BANNER + AVATAR — how to add your own images
+
+banner.jpg   -> the wide banner across the top.
+               Recommended size ~1500x500 (3:1 ratio). JPG or PNG.
+               Keep important content out of the bottom-LEFT corner —
+               the avatar sits there. Until this file exists, a plain
+               soft-blue gradient shows instead (no broken image).
+
+headshot.jpg -> the round avatar overlapping the banner.
+               Square image, at least 256x256. Until it exists, a "PB"
+               monogram circle shows instead.
+
+Just drop files with these exact names into the repo root and they
+appear automatically — no HTML editing needed.
