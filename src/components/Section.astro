@@ -1,0 +1,30 @@
+---
+interface Props {
+  id: string;
+  title: string;
+  /** Optional mono note shown on the right of the title row. */
+  note?: string;
+}
+const { id, title, note } = Astro.props;
+---
+
+<section id={id} aria-labelledby={`${id}-title`}>
+  <div class="head">
+    <h2 id={`${id}-title`}>{title}</h2>
+    {note && <span class="note">{note}</span>}
+  </div>
+  <slot />
+</section>
+
+<style>
+  section { padding: 56px 0 8px; }
+  .head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 20px; }
+  h2 {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 26px;
+    letter-spacing: .01em;
+    line-height: 1;
+  }
+  .note { font-family: var(--font-mono); font-size: 12px; color: var(--faint); }
+</style>

@@ -1,0 +1,29 @@
+---
+import { getImage } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Intro from '../components/Intro.astro';
+import Experience from '../components/Experience.astro';
+import Projects from '../components/Projects.astro';
+import Research from '../components/Research.astro';
+import GithubActivity from '../components/GithubActivity.astro';
+import Toolkit from '../components/Toolkit.astro';
+import Footer from '../components/Footer.astro';
+import headshot from '../assets/headshot.jpg';
+import { site } from '../lib/site';
+
+const og = await getImage({ src: headshot, width: 400, height: 400, format: 'jpg' });
+---
+
+<Base title={site.title} description={site.description} ogImage={og.src}>
+  <Header />
+  <main class="wrap">
+    <Intro />
+    <Experience />
+    <Projects />
+    <Research />
+    <GithubActivity />
+    <Toolkit />
+  </main>
+  <Footer />
+</Base>

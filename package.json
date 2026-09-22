@@ -1,0 +1,21 @@
+{
+  "name": "pruhnav-site",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "check:dashes": "node scripts/check-dashes.mjs",
+    "build": "node scripts/check-dashes.mjs && astro check && astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@fontsource/doto": "^5.3.0",
+    "@fontsource/geist-mono": "^5.3.0",
+    "@fontsource/geist-sans": "^5.3.0",
+    "astro": "^7.3.3",
+    "simple-icons": "^16.32.0",
+    "typescript": "^6.0.3"
+  }
+}

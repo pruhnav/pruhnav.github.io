@@ -1,0 +1,21 @@
+---
+// The "nav" wordmark: slanted block letters, with the n's left leg breaking into speed stripes.
+// Drawn upright in a 100-unit-tall grid, then skewed; fills with currentColor.
+interface Props { height?: number; class?: string }
+const { height = 20, class: className } = Astro.props;
+const width = Math.round((height * 479) / 116);
+---
+
+<svg class={className} viewBox="-95 -8 479 116" width={width} height={height} role="img" aria-label="nav">
+  <g transform="skewX(-14)" fill="currentColor" fill-rule="evenodd">
+    <rect x="-40" y="0" width="80" height="11" />
+    <rect x="-20" y="17.8" width="60" height="11" />
+    <rect x="-60" y="35.6" width="100" height="11" />
+    <rect x="-30" y="53.4" width="70" height="11" />
+    <rect x="-50" y="71.2" width="90" height="11" />
+    <rect x="-10" y="89" width="50" height="11" />
+    <path d="M40 0H124V100H88V28H40Z" />
+    <path transform="translate(140 0)" d="M0 0H110V100H0V40H78V24H0Z M32 60H78V80H32Z" />
+    <path transform="translate(266 0)" d="M0 0H34L55 64L76 0H110L73 100H37Z" />
+  </g>
+</svg>

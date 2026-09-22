@@ -1,0 +1,126 @@
+---
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+import Section from './Section.astro';
+
+const all = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+const featured = all.filter((p) => p.data.featured);
+const rest = all.filter((p) => !p.data.featured);
+---
+
+<Section id="projects" title="Projects" note={`${all.length} total`}>
+  <div class="grid">
+    {featured.map(({ data }) => {
+      const primary = data.demo ?? data.repo;
+      return (
+        <article class="card">
+          <a class="shot" href={primary} target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
+            {data.image
+              ? <Image src={data.image} alt="" width={640} />
+              : <span class="ph">{data.title}</span>}
+          </a>
+          <div class="info">
+            <div class="top">
+              <h3>{primary ? <a href={primary} target="_blank" rel="noopener">{data.title}</a> : data.title}</h3>
+              <span class="yr mono">{data.year}</span>
+            </div>
+            {data.badge && <span class="badge mono">{data.badge}</span>}
+            <p>{data.description}</p>
+            <div class="foot">
+              <div class="tags">{data.tags.map((t) => <span class="chip">{t}</span>)}</div>
+              <div class="links">
+                {data.demo && <a class="link-arrow" href={data.demo} target="_blank" rel="noopener">Live &#8599;</a>}
+                {data.repo && <a class="link-arrow" href={data.repo} target="_blank" rel="noopener">Code &#8599;</a>}
+              </div>
+            </div>
+          </div>
+        </article>
+      );
+    })}
+  </div>
+
+  <h3 class="sub mono">More projects</h3>
+  <ul class="rest">
+    {rest.map(({ data }) => {
+      const href = data.repo ?? data.demo;
+      const inner = (
+        <>
+          <span class="yr mono">{data.year}</span>
+          <span class="name">{data.title}</span>
+          <span class="desc">{data.description}</span>
+          <span class="arrow mono" aria-hidden="true">{href ? '↗' : ''}</span>
+        </>
+      );
+      return <li>{href ? <a href={href} target="_blank" rel="noopener">{inner}</a> : <div>{inner}</div>}</li>;
+    })}
+  </ul>
+</Section>
+
+<style>
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
+  .card {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+    overflow: hidden;
+    transition: border-color .2s var(--ease);
+  }
+  .card:hover { border-color: var(--border-strong); }
+  .shot { display: block; aspect-ratio: 16 / 10; border-bottom: 1px solid var(--border); background: var(--surface-2); }
+  .shot :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .ph {
+    display: grid;
+    place-items: center;
+    height: 100%;
+    padding: 12px;
+    text-align: center;
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: clamp(26px, 5vw, 34px);
+    color: var(--muted);
+    background-image: radial-gradient(var(--dot) 1px, transparent 1px);
+    background-size: 10px 10px;
+    transition: color .2s var(--ease);
+  }
+  .card:hover .ph { color: var(--text); }
+  .info { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+  .top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+  h3 { font-size: 15px; font-weight: 600; }
+  h3 a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .yr { font-size: 12px; color: var(--faint); }
+  .badge {
+    align-self: flex-start;
+    font-size: 11px;
+    color: var(--text);
+    border: 1px solid var(--border-strong);
+    border-radius: 6px;
+    padding: 1px 7px;
+  }
+  p { font-size: 13.5px; color: var(--muted); line-height: 1.55; }
+  .foot { margin-top: auto; padding-top: 4px; display: flex; justify-content: space-between; align-items: flex-end; gap: 10px; flex-wrap: wrap; }
+  .tags { display: flex; flex-wrap: wrap; gap: 5px; }
+  .links { display: flex; gap: 12px; }
+
+  .sub { font-size: 12px; font-weight: 400; color: var(--faint); margin: 32px 0 8px; text-transform: uppercase; letter-spacing: .06em; }
+  .rest { list-style: none; border-top: 1px solid var(--border); }
+  .rest li { border-bottom: 1px solid var(--border); }
+  .rest a, .rest div {
+    display: grid;
+    grid-template-columns: 44px 170px 1fr 16px;
+    gap: 12px;
+    align-items: baseline;
+    padding: 11px 0;
+  }
+  .rest a:hover .name { text-decoration: underline; text-underline-offset: 3px; }
+  .rest a:hover .arrow { color: var(--text); }
+  .name { font-size: 14px; font-weight: 500; }
+  .desc { font-size: 13px; color: var(--muted); }
+  .arrow { font-size: 12px; color: var(--faint); text-align: right; }
+  @media (max-width: 600px) {
+    .rest a, .rest div { grid-template-columns: 44px 1fr 16px; row-gap: 2px; }
+    .desc { grid-column: 2 / 3; grid-row: 2; }
+  }
+</style>

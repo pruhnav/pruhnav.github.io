@@ -1,0 +1,48 @@
+---
+import Section from './Section.astro';
+
+const paper = {
+  venue: 'IEEE Data Descriptions',
+  year: 2025,
+  title: 'UniElecPrice: A Unified Cross-Regional Day-Ahead Electricity Price Dataset',
+  href: 'https://ieeexplore.ieee.org/document/11169754',
+  orcid: 'https://orcid.org/0009-0000-1425-2821',
+  summary:
+    'A globally unified dataset of day-ahead electricity prices from 40 markets across 5 continents, built for standardized forecasting research. Includes a hybrid CNN, BiLSTM, and attention model that outperformed LSTM and Transformer baselines.',
+  stats: ['RMSE 16.49 → 12.40', 'R² 0.63 → 0.87', '40 markets', '5 continents'],
+};
+---
+
+<Section id="research" title="Research">
+  <article class="paper">
+    <div class="meta mono">{paper.venue} &middot; {paper.year}</div>
+    <h3><a href={paper.href} target="_blank" rel="noopener">{paper.title}</a></h3>
+    <p>{paper.summary}</p>
+    <div class="stats">{paper.stats.map((s) => <span class="chip">{s}</span>)}</div>
+    <div class="links">
+      <a class="link-arrow" href={paper.href} target="_blank" rel="noopener">IEEE Xplore &#8599;</a>
+      <a class="link-arrow" href={paper.orcid} target="_blank" rel="noopener">ORCID &#8599;</a>
+    </div>
+  </article>
+  <p class="pending mono">+ three further papers pending publication</p>
+</Section>
+
+<style>
+  .paper {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+    padding: 20px;
+    display: grid;
+    gap: 10px;
+    transition: border-color .2s var(--ease);
+  }
+  .paper:hover { border-color: var(--border-strong); }
+  .meta { font-size: 12px; color: var(--faint); }
+  h3 { font-size: 17px; font-weight: 600; line-height: 1.35; }
+  h3 a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  p { font-size: 13.5px; color: var(--muted); }
+  .stats { display: flex; flex-wrap: wrap; gap: 6px; }
+  .links { display: flex; gap: 14px; }
+  .pending { font-size: 12px; color: var(--faint); margin-top: 12px; }
+</style>

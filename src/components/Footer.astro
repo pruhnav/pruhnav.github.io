@@ -1,0 +1,33 @@
+---
+import { site, socials } from '../lib/site';
+const year = new Date().getFullYear();
+---
+
+<footer class="wrap">
+  <div class="cta">
+    <p>Open to ML and software engineering roles.</p>
+    <a class="mail mono" href={`mailto:${site.email}`}>{site.email} &#8599;</a>
+  </div>
+  <div class="bottom">
+    <span class="mono">&copy; {year} {site.name}</span>
+    <nav aria-label="Elsewhere">
+      {socials.map((s) => (
+        <a href={s.href} target="_blank" rel="noopener" aria-label={s.label}>
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d={s.icon} /></svg>
+        </a>
+      ))}
+    </nav>
+  </div>
+</footer>
+
+<style>
+  footer { margin-top: 72px; }
+  .cta { border-top: 1px solid var(--border); padding: 28px 0; display: grid; gap: 6px; }
+  .cta p { color: var(--muted); font-size: 14px; }
+  .mail { font-size: 15px; width: fit-content; }
+  .mail:hover { text-decoration: underline; text-underline-offset: 4px; }
+  .bottom { display: flex; justify-content: space-between; align-items: center; padding: 18px 0 40px; border-top: 1px solid var(--border); font-size: 12px; color: var(--faint); }
+  nav { display: flex; gap: 14px; }
+  nav a { color: var(--faint); transition: color .2s var(--ease); }
+  nav a:hover { color: var(--text); }
+</style>

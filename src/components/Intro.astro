@@ -1,0 +1,85 @@
+---
+import { site, socials } from '../lib/site';
+
+const links = socials.filter((s) => s.label !== 'ORCID');
+---
+
+<section class="intro" id="top">
+  <h1>Pranav Balachander</h1>
+  <p class="role mono">
+    ML engineer &middot; IEEE author &middot; <span class="clock" title="My local time">California &middot; <time data-clock>--:--</time></span>
+  </p>
+  <p class="bio">
+    I build machine learning systems end to end, from forecasting models and RAG pipelines to the
+    frontends people actually use. Computer Science graduate from Penn State, published in IEEE,
+    and usually at a hackathon on the weekend.
+  </p>
+  <div class="links">
+    <a class="btn primary" href={`mailto:${site.email}`}>
+      <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5" /><path d="m3.5 7 8.5 6 8.5-6" /></svg>
+      Email
+    </a>
+    <a class="btn" href="/resume.pdf" download="Pranav-Balachander-CV.pdf">
+      <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v11" /><path d="m7.5 10 4.5 4.5 4.5-4.5" /><path d="M5 20h14" /></svg>
+      Resume
+    </a>
+    {links.map((s) => (
+      <a class="btn" href={s.href} target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true"><path d={s.icon} /></svg>
+        {s.label}
+      </a>
+    ))}
+  </div>
+</section>
+
+<script>
+  // Live local time in California, e.g. "11:34 PM PDT".
+  const el = document.querySelector<HTMLTimeElement>('[data-clock]');
+  if (el) {
+    const fmt = new Intl.DateTimeFormat('en-US', {
+      timeZone: 'America/Los_Angeles',
+      hour: 'numeric',
+      minute: '2-digit',
+      timeZoneName: 'short',
+    });
+    const tick = () => {
+      const now = new Date();
+      el.textContent = fmt.format(now);
+      el.dateTime = now.toISOString();
+    };
+    tick();
+    setInterval(tick, 1000);
+  }
+</script>
+
+<style>
+  .intro { padding: 56px 0 8px; }
+  h1 {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: clamp(24px, 6vw, 32px);
+    line-height: 1.1;
+    letter-spacing: .005em;
+    margin-bottom: 12px;
+  }
+  .clock { white-space: nowrap; }
+  .role { font-size: 13px; color: var(--muted); margin-bottom: 16px; }
+  .bio { color: var(--muted); max-width: 56ch; font-size: 15.5px; }
+  .links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 7px 12px;
+    border-radius: 9px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    transition: border-color .2s var(--ease), background .2s var(--ease);
+  }
+  .btn:hover { border-color: var(--border-strong); }
+  .btn.primary { background: var(--text); color: var(--bg); border-color: var(--text); }
+  .btn.primary:hover { opacity: .9; }
+</style>
