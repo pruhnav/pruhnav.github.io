@@ -34,6 +34,8 @@ const projects = defineCollection({
       repo: z.url().optional(),
       demo: z.url().optional(),
       badge: z.string().optional(),
+      /** Colors the badge: gold for wins, psu for Penn State work (adds the lion), oss for open source (adds the GitHub mark). */
+      badgeTone: z.enum(['gold', 'psu', 'oss']).optional(),
       image: image().optional(),
       featured: z.boolean().default(false),
       order: z.number(),

@@ -5,6 +5,8 @@ description: VR tool for labeling 3D anatomical models on Meta Quest 3, with Tri
 tags: [Unity, C#, XR]
 repo: https://github.com/pruhnav/capstoneproject2026
 badge: Capstone
+badgeTone: psu
 featured: true
 order: 3
+image: ../../assets/projects/vals.png
 ---

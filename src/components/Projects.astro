@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import { Image } from 'astro:assets';
 import Section from './Section.astro';
+import psuLion from '../assets/psu-lion.png';
 
 const all = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
 const featured = all.filter((p) => p.data.featured);
@@ -24,7 +25,15 @@ const rest = all.filter((p) => !p.data.featured);
               <h3>{primary ? <a href={primary} target="_blank" rel="noopener">{data.title}</a> : data.title}</h3>
               <span class="yr mono">{data.year}</span>
             </div>
-            {data.badge && <span class="badge mono">{data.badge}</span>}
+            {data.badge && (
+              <span class:list={['badge mono', data.badgeTone]}>
+                {data.badgeTone === 'psu' && <Image src={psuLion} alt="" width={48} class="crest" />}
+                {data.badgeTone === 'oss' && (
+                  <svg class="crest" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.230-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.150 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z" /></svg>
+                )}
+                {data.badge}
+              </span>
+            )}
             <p>{data.description}</p>
             <div class="foot">
               <div class="tags">{data.tags.map((t) => <span class="chip">{t}</span>)}</div>
@@ -69,7 +78,7 @@ const rest = all.filter((p) => !p.data.featured);
     transition: border-color .2s var(--ease);
   }
   .card:hover { border-color: var(--border-strong); }
-  .shot { display: block; aspect-ratio: 16 / 10; border-bottom: 1px solid var(--border); background: var(--surface-2); }
+  .shot { display: block; aspect-ratio: 2 / 1; overflow: hidden; border-bottom: 1px solid var(--border); background: var(--surface-2); }
   .shot :global(img) { width: 100%; height: 100%; object-fit: cover; }
   .ph {
     display: grid;
@@ -99,6 +108,11 @@ const rest = all.filter((p) => !p.data.featured);
     border-radius: 6px;
     padding: 1px 7px;
   }
+  .badge.gold { color: var(--surface); border-color: var(--gold); background: var(--gold); font-weight: 500; }
+  .badge.psu, .badge.oss { display: inline-flex; align-items: center; gap: 5px; color: #fff; font-weight: 500; }
+  .badge.psu { border-color: var(--psu); background: var(--psu); }
+  .badge.oss { border-color: var(--oss); background: var(--oss); }
+  .crest { width: auto; height: 12px; }
   p { font-size: 13.5px; color: var(--muted); line-height: 1.55; }
   .foot { margin-top: auto; padding-top: 4px; display: flex; justify-content: space-between; align-items: flex-end; gap: 10px; flex-wrap: wrap; }
   .tags { display: flex; flex-wrap: wrap; gap: 5px; }

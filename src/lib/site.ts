@@ -4,7 +4,7 @@ export const site = {
   name: 'Pranav Balachander',
   title: 'Pranav Balachander',
   description:
-    'Pranav Balachander. ML engineer building forecasting and retrieval systems. Published IEEE researcher.',
+    'Pranav Balachander. Penn State CS grad building things with ML: forecasting research published in IEEE, plus hackathon projects.',
   email: 'p.pranavbalachander@gmail.com',
   githubUser: 'pruhnav',
 };

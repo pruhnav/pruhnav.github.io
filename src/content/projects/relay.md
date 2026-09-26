@@ -7,4 +7,5 @@ repo: https://github.com/pruhnav/relay
 badge: Codex Hackathon '26
 featured: true
 order: 4
+image: ../../assets/projects/relay.png
 ---

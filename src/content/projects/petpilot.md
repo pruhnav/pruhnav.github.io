@@ -6,6 +6,8 @@ tags: [React, Node.js, LLM]
 repo: https://github.com/pruhnav/petpilot
 demo: https://dog-os-dogathon-1.replit.app/
 badge: Winner, Dogathon '26
+badgeTone: gold
 featured: true
 order: 1
+image: ../../assets/projects/petpilot.png
 ---
