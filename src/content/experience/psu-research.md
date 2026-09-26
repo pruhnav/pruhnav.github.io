@@ -1,7 +1,7 @@
 ---
 company: Penn State, Dept. of CS
 role: Research Assistant
-location: Harrisburg, PA
+location: Pennsylvania
 start: Apr 2025
 end: May 2026
 tags: [TensorFlow, Keras, Python, Pandas, Scikit-learn]

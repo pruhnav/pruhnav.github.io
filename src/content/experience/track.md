@@ -1,7 +1,7 @@
 ---
 company: Penn State Harrisburg
 role: Men's Track & Field
-location: Harrisburg, PA
+location: Pennsylvania
 mono: TF
 link:
   label: Roster

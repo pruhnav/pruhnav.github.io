@@ -1,7 +1,7 @@
 ---
 company: commutr
 role: Founder
-location: SF/PA
+location: California / Pennsylvania
 start: "2025"
 end: Present
 tags: [Figma, Product, UX Research]

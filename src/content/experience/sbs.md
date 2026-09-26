@@ -1,7 +1,7 @@
 ---
 company: SBS IT Solutions
 role: AI Engineer
-location: Houston, TX
+location: Texas
 remote: India
 start: Jun 2025
 end: Sep 2025
