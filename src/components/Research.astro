@@ -1,33 +1,76 @@
 ---
 import Section from './Section.astro';
+import LinkIcon from './LinkIcon.astro';
 
-const paper = {
-  venue: 'IEEE Data Descriptions',
-  year: 2025,
-  title: 'UniElecPrice: A Unified Cross-Regional Day-Ahead Electricity Price Dataset',
-  href: 'https://ieeexplore.ieee.org/document/11169754',
-  orcid: 'https://orcid.org/0009-0000-1425-2821',
-  summary:
-    'A globally unified dataset of day-ahead electricity prices from 40 markets across 5 continents, built for standardized forecasting research. Includes a hybrid CNN, BiLSTM, and attention model that outperformed LSTM and Transformer baselines.',
-  stats: ['RMSE 16.49 → 12.40', 'R² 0.63 → 0.87', '40 markets', '5 continents'],
-};
+const papers = [
+  {
+    venue: 'Springer CCIS (SEET)',
+    year: 2026,
+    title: 'VALS: A Model-Agnostic Virtual Reality Framework for Real-Time Annotation of 3D Anatomical Models',
+    href: 'https://doi.org/10.1007/978-3-032-39763-8_24',
+    label: 'Springer',
+    summary:
+      'A VR framework for Meta Quest 3 that lets anatomy instructors load any OBJ model and place, search, and save labeled pins in real time, fully on-device. Built in Unity 6 with OpenXR as a capstone with the Penn State College of Medicine.',
+  },
+  {
+    venue: 'IEEE Data Descriptions',
+    year: 2025,
+    title: 'UniElecPrice: A Unified Cross-Regional Day-Ahead Electricity Price Dataset',
+    href: 'https://ieeexplore.ieee.org/document/11169754',
+    label: 'IEEE Xplore',
+    summary:
+      'A globally unified dataset of day-ahead electricity prices from 40 markets across 5 continents, built for standardized forecasting research. Includes a hybrid CNN, BiLSTM, and attention model that outperformed LSTM and Transformer baselines.',
+  },
+];
+
+const other = [
+  {
+    year: 2026,
+    title: 'Assessing Tick-Borne Pathogen Transmission Risk in Pennsylvania',
+    desc: 'ML and geospatial analysis to predict tick-borne pathogen presence and hotspots across Pennsylvania.',
+    href: 'https://github.com/pruhnav/pa-tick-risk-mapping',
+  },
+  {
+    year: 2025,
+    title: 'Arctic Mercury Modeling',
+    desc: 'ML-assisted modeling of mercury reduction, reemission, and diffusion across Arctic snow and ice.',
+  },
+];
 ---
 
 <Section id="research" title="Research">
-  <article class="paper">
-    <div class="meta mono">{paper.venue} &middot; {paper.year}</div>
-    <h3><a href={paper.href} target="_blank" rel="noopener">{paper.title}</a></h3>
-    <p>{paper.summary}</p>
-    <div class="stats">{paper.stats.map((s) => <span class="chip">{s}</span>)}</div>
-    <div class="links">
-      <a class="link-arrow" href={paper.href} target="_blank" rel="noopener">IEEE Xplore &#8599;</a>
-      <a class="link-arrow" href={paper.orcid} target="_blank" rel="noopener">ORCID &#8599;</a>
-    </div>
-  </article>
-  <p class="pending mono">+ three further papers pending publication</p>
+  <div class="list">
+    {papers.map((paper) => (
+      <article class="paper">
+        <div class="meta mono">{paper.venue} &middot; {paper.year}</div>
+        <h3><a href={paper.href} target="_blank" rel="noopener">{paper.title}</a></h3>
+        <p>{paper.summary}</p>
+        <div class="links">
+          <a class="link-arrow" href={paper.href} target="_blank" rel="noopener"><LinkIcon href={paper.href} />{paper.label}</a>
+        </div>
+      </article>
+    ))}
+  </div>
+  <h3 class="sub mono">Pending publication</h3>
+  <ul class="rest">
+    {other.map((r) => {
+      const inner = (
+        <>
+          <span class="yr mono">{r.year}</span>
+          <span class="body">
+            <span class="name">{r.title}</span>
+            <span class="desc">{r.desc}</span>
+          </span>
+          <span class="arrow" aria-hidden="true">{r.href && <LinkIcon href={r.href} />}</span>
+        </>
+      );
+      return <li>{r.href ? <a href={r.href} target="_blank" rel="noopener">{inner}</a> : <div>{inner}</div>}</li>;
+    })}
+  </ul>
 </Section>
 
 <style>
+  .list { display: grid; gap: 12px; }
   .paper {
     border: 1px solid var(--border);
     border-radius: var(--radius);
@@ -42,7 +85,18 @@ const paper = {
   h3 { font-size: 17px; font-weight: 600; line-height: 1.35; }
   h3 a:hover { text-decoration: underline; text-underline-offset: 3px; }
   p { font-size: 13.5px; color: var(--muted); }
-  .stats { display: flex; flex-wrap: wrap; gap: 6px; }
   .links { display: flex; gap: 14px; }
-  .pending { font-size: 12px; color: var(--faint); margin-top: 12px; }
+
+  .sub { font-size: 12px; font-weight: 400; color: var(--faint); margin: 32px 0 8px; text-transform: uppercase; letter-spacing: .06em; line-height: inherit; }
+  .rest { list-style: none; border-top: 1px solid var(--border); }
+  .rest li { border-bottom: 1px solid var(--border); }
+  .rest a, .rest div { display: grid; grid-template-columns: 44px 1fr 16px; gap: 12px; align-items: baseline; padding: 11px 0; }
+  .rest a:hover .name { text-decoration: underline; text-underline-offset: 3px; }
+  .rest a:hover .arrow { color: var(--text); }
+  .body { display: grid; gap: 2px; }
+  .yr { font-size: 12px; color: var(--faint); }
+  .name { font-size: 14px; font-weight: 500; }
+  .desc { font-size: 13px; color: var(--muted); }
+  .arrow { font-size: 12px; color: var(--faint); text-align: right; }
+  .arrow svg { width: 13px; height: 13px; vertical-align: -2px; }
 </style>

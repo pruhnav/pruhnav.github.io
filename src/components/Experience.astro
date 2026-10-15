@@ -2,6 +2,7 @@
 import { getCollection, render } from 'astro:content';
 import { Image } from 'astro:assets';
 import Section from './Section.astro';
+import LinkIcon from './LinkIcon.astro';
 
 const roles = (await getCollection('experience', (r) => !r.data.hidden)).sort((a, b) => a.data.order - b.data.order);
 const items = await Promise.all(roles.map(async (r) => ({ ...r, Content: (await render(r)).Content })));
@@ -10,9 +11,13 @@ const items = await Promise.all(roles.map(async (r) => ({ ...r, Content: (await 
 <Section id="experience" title="Experience">
   <ul class="list">
     {items.map(({ data, body, Content }) => {
-      // Roles with bullets or tags expand; a role with only a link shows it as a button instead.
+      // Roles with bullets or tags expand; a role with only links shows them as buttons instead.
       const hasMore = Boolean(body?.trim()) || data.tags.length > 0;
       const dates = data.start ? `${data.start} - ${data.end ?? 'Present'}` : '';
+      const linkInner = (link: (typeof data.links)[number]) =>
+        link.icon
+          ? <><Image src={link.icon} alt="" height={28} class="link-icon" />{link.label}</>
+          : <><LinkIcon href={link.href} />{link.label}</>;
       const head = (
         <div class="row">
           <div class="logo" aria-hidden="true">
@@ -48,16 +53,24 @@ const items = await Promise.all(roles.map(async (r) => ({ ...r, Content: (await 
                 {data.tags.length > 0 && (
                   <div class="tags">{data.tags.map((t) => <span class="chip">{t}</span>)}</div>
                 )}
-                {data.link && (
-                  <a class="link-arrow" href={data.link.href} target="_blank" rel="noopener">{data.link.label} &#8599;</a>
+                {data.links.length > 0 && (
+                  <div class="links">
+                    {data.links.map((link) => (
+                      <a class="link-arrow" href={link.href} target="_blank" rel="noopener">{linkInner(link)}</a>
+                    ))}
+                  </div>
                 )}
               </div>
             </details>
           ) : (
             <div class="plain">
               {head}
-              {data.link && (
-                <a class="toggle btn-link mono" href={data.link.href} target="_blank" rel="noopener">{data.link.label} &#8599;</a>
+              {data.links.length > 0 && (
+                <div class="btns">
+                  {data.links.map((link) => (
+                    <a class="toggle btn-link mono" href={link.href} target="_blank" rel="noopener">{linkInner(link)}</a>
+                  ))}
+                </div>
               )}
             </div>
           )}
@@ -77,6 +90,11 @@ const items = await Promise.all(roles.map(async (r) => ({ ...r, Content: (await 
   details .row, .plain .row { padding-right: 84px; }
   .plain { position: relative; }
   .btn-link:hover { color: var(--text); border-color: var(--border-strong); }
+  .btn-link { display: inline-flex; align-items: center; justify-content: center; gap: 5px; }
+  .btns { position: absolute; right: 0; top: 16px; display: grid; gap: 5px; }
+  .btns .toggle { position: static; }
+  .links { display: flex; flex-wrap: wrap; gap: 14px; }
+  .link-icon { width: auto; height: 11px; }
   .logo {
     width: 36px;
     height: 36px;

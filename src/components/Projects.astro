@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import { Image } from 'astro:assets';
 import Section from './Section.astro';
 import psuLion from '../assets/psu-lion.png';
+import LinkIcon from './LinkIcon.astro';
 
 const all = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
 const featured = all.filter((p) => p.data.featured);
@@ -38,8 +39,9 @@ const rest = all.filter((p) => !p.data.featured);
             <div class="foot">
               <div class="tags">{data.tags.map((t) => <span class="chip">{t}</span>)}</div>
               <div class="links">
-                {data.demo && <a class="link-arrow" href={data.demo} target="_blank" rel="noopener">Live &#8599;</a>}
-                {data.repo && <a class="link-arrow" href={data.repo} target="_blank" rel="noopener">Code &#8599;</a>}
+                {data.demo && <a class="link-arrow" href={data.demo} target="_blank" rel="noopener"><LinkIcon href={data.demo} />Live</a>}
+                {data.paper && <a class="link-arrow" href={data.paper} target="_blank" rel="noopener"><LinkIcon href={data.paper} />Paper</a>}
+                {data.repo && <a class="link-arrow" href={data.repo} target="_blank" rel="noopener"><LinkIcon href={data.repo} />Code</a>}
               </div>
             </div>
           </div>
@@ -57,7 +59,7 @@ const rest = all.filter((p) => !p.data.featured);
           <span class="yr mono">{data.year}</span>
           <span class="name">{data.title}</span>
           <span class="desc">{data.description}</span>
-          <span class="arrow mono" aria-hidden="true">{href ? '↗' : ''}</span>
+          <span class="arrow" aria-hidden="true">{href && <LinkIcon href={href} />}</span>
         </>
       );
       return <li>{href ? <a href={href} target="_blank" rel="noopener">{inner}</a> : <div>{inner}</div>}</li>;
@@ -133,6 +135,7 @@ const rest = all.filter((p) => !p.data.featured);
   .name { font-size: 14px; font-weight: 500; }
   .desc { font-size: 13px; color: var(--muted); }
   .arrow { font-size: 12px; color: var(--faint); text-align: right; }
+  .arrow svg { width: 13px; height: 13px; vertical-align: -2px; }
   @media (max-width: 600px) {
     .rest a, .rest div { grid-template-columns: 44px 1fr 16px; row-gap: 2px; }
     .desc { grid-column: 2 / 3; grid-row: 2; }

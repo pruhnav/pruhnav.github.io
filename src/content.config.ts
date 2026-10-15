@@ -16,7 +16,8 @@ const experience = defineCollection({
       tags: z.array(z.string()).default([]),
       logo: image().optional(),
       mono: z.string().max(3),
-      link: z.object({ label: z.string(), href: z.url() }).optional(),
+      /** An icon replaces the trailing arrow and sits before the label. */
+      links: z.array(z.object({ label: z.string(), href: z.url(), icon: image().optional() })).default([]),
       order: z.number(),
       /** Set to true to keep a role in the repo without showing it on the site. */
       hidden: z.boolean().default(false),
@@ -33,6 +34,8 @@ const projects = defineCollection({
       tags: z.array(z.string()).default([]),
       repo: z.url().optional(),
       demo: z.url().optional(),
+      /** Published paper for the project; shows a "Paper" link on featured cards. */
+      paper: z.url().optional(),
       badge: z.string().optional(),
       /** Colors the badge: gold for wins, psu for Penn State work (adds the lion), oss for open source (adds the GitHub mark). */
       badgeTone: z.enum(['gold', 'psu', 'oss']).optional(),

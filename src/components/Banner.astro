@@ -1,15 +1,283 @@
 ---
-// Placeholder banner at the top of the page. Content to be decided.
+// Ink sketches of places I've lived, drawn over a sky that follows the theme:
+// daytime in light mode, a starry night in dark mode. The ink and skyline-fill
+// layers are alpha masks, so the same drawing works in both themes.
+import la1Ink from '../assets/banner/la1-panorama-ink.webp';
+import la1Fill from '../assets/banner/la1-panorama-fill.webp';
+import pa4Ink from '../assets/banner/pa4-state-college-ink.webp';
+import pa4Fill from '../assets/banner/pa4-state-college-fill.webp';
+import ny1Ink from '../assets/banner/ny1-brooklyn-bridge-ink.webp';
+import ny1Fill from '../assets/banner/ny1-brooklyn-bridge-fill.webp';
+import pa3Ink from '../assets/banner/pa3-harrisburg-ink.webp';
+import pa3Fill from '../assets/banner/pa3-harrisburg-fill.webp';
+import la2Ink from '../assets/banner/la2-griffith-ink.webp';
+import la2Fill from '../assets/banner/la2-griffith-fill.webp';
+
+// Cycle order. mx/my place the sun or moon over the lowest stretch of skyline.
+const places = [
+  { name: 'Los Angeles', ink: la1Ink, fill: la1Fill, mx: 0.9, my: 0.23 },
+  { name: 'Old Main, State College', ink: pa4Ink, fill: pa4Fill, mx: 0.9, my: 0.19 },
+  { name: 'Brooklyn Bridge, New York', ink: ny1Ink, fill: ny1Fill, mx: 0.17, my: 0.21 },
+  { name: 'State Capitol, Harrisburg', ink: pa3Ink, fill: pa3Fill, mx: 0.87, my: 0.22 },
+  { name: 'Griffith Observatory, Los Angeles', ink: la2Ink, fill: la2Fill, mx: 0.59, my: 0.21 },
+];
+
+// Masks are pre-encoded WebP (lossy alpha), so they're used as-is rather than re-encoded.
+const slides = places.map(({ name, ink, fill, mx, my }) => ({ name, ink: ink.src, fill: fill.src, mx, my }));
+
+const vars = (s: (typeof slides)[number]) =>
+  `--ink-m:url(${s.ink});--fill-m:url(${s.fill});--mx:${s.mx};--my:${s.my}`;
+
+// Fixed star field (seeded so every build draws the same sky).
+let seed = 7;
+const rand = () => ((seed = (seed * 16807) % 2147483647) - 1) / 2147483646;
+const stars = Array.from({ length: 48 }, () => ({
+  x: (1 + rand() * 98).toFixed(1),
+  y: (2 + rand() * 50).toFixed(1),
+  r: (0.5 + rand() * 0.7).toFixed(2),
+  o: (0.35 + rand() * 0.65).toFixed(2),
+  tw: rand() < 0.25,
+}));
+const first = slides[0];
 ---
 
-<div class="banner" id="top" aria-hidden="true"></div>
+<div class="banner" id="top" data-banner data-slides={JSON.stringify(slides)}>
+  <div class="sky" aria-hidden="true">
+    <svg class="stars" width="100%" height="100%">
+      {stars.map((s) => <circle class:list={{ tw: s.tw }} cx={`${s.x}%`} cy={`${s.y}%`} r={s.r} opacity={s.o} />)}
+    </svg>
+  </div>
+  <div class="scene on" style={vars(first)} aria-hidden="true">
+    <span class="orb"></span><span class="fill"></span><span class="ink"></span>
+  </div>
+  <div class="scene" aria-hidden="true">
+    <span class="orb"></span><span class="fill"></span><span class="ink"></span>
+  </div>
+  <button class="place mono" type="button" data-next aria-label={`Showing ${first.name}. Show the next place`}>
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11Z" /><circle cx="12" cy="10" r="2.3" /></svg>
+    <span data-name>{first.name}</span>
+  </button>
+</div>
+<script is:inline>
+  // Pick a random place before first paint so the default never flashes.
+  (function () {
+    var b = document.currentScript.previousElementSibling;
+    var slides = JSON.parse(b.getAttribute('data-slides'));
+    var i = Math.floor(Math.random() * slides.length);
+    b.setAttribute('data-index', String(i));
+    if (i === 0) return;
+    var s = slides[i];
+    var scene = b.querySelector('.scene.on');
+    scene.style.setProperty('--ink-m', 'url(' + s.ink + ')');
+    scene.style.setProperty('--fill-m', 'url(' + s.fill + ')');
+    scene.style.setProperty('--mx', s.mx);
+    scene.style.setProperty('--my', s.my);
+    b.querySelector('[data-name]').textContent = s.name;
+    b.querySelector('[data-next]').setAttribute('aria-label', 'Showing ' + s.name + '. Show the next place');
+  })();
+</script>
+
+<script>
+  type Slide = { name: string; ink: string; fill: string; mx: number; my: number };
+
+  const banner = document.querySelector<HTMLElement>('[data-banner]');
+  if (banner) {
+    const slides: Slide[] = JSON.parse(banner.dataset.slides ?? '[]');
+    const scenes = banner.querySelectorAll<HTMLElement>('.scene');
+    const button = banner.querySelector<HTMLButtonElement>('[data-next]')!;
+    const name = banner.querySelector<HTMLElement>('[data-name]')!;
+    let index = Number(banner.dataset.index ?? 0);
+    let front = 0;
+    let busy = false;
+
+    const preload = (s: Slide) =>
+      Promise.all(
+        [s.ink, s.fill].map((src) => {
+          const img = new Image();
+          img.src = src;
+          return img.decode().catch(() => {});
+        }),
+      );
+
+    const apply = (el: HTMLElement, s: Slide) => {
+      el.style.setProperty('--ink-m', `url(${s.ink})`);
+      el.style.setProperty('--fill-m', `url(${s.fill})`);
+      el.style.setProperty('--mx', String(s.mx));
+      el.style.setProperty('--my', String(s.my));
+    };
+
+    const warmNext = () => preload(slides[(index + 1) % slides.length]);
+    if ('requestIdleCallback' in window) requestIdleCallback(warmNext);
+    else setTimeout(warmNext, 1500);
+
+    const advance = async () => {
+      if (busy) return;
+      busy = true;
+      const next = (index + 1) % slides.length;
+      await preload(slides[next]);
+      const back = scenes[1 - front];
+      apply(back, slides[next]);
+      back.classList.add('on');
+      scenes[front].classList.remove('on');
+      front = 1 - front;
+      index = next;
+      name.textContent = slides[next].name;
+      button.setAttribute('aria-label', `Showing ${slides[next].name}. Show the next place`);
+      busy = false;
+      warmNext();
+    };
+
+    // Auto-advance every 10 seconds. Holds while the banner is hovered or focused
+    // or the tab is in the background, and stays off for reduced-motion users.
+    const INTERVAL = 10_000;
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let hovered = false;
+    let focused = false;
+    let timer: number | undefined;
+    const schedule = () => {
+      window.clearTimeout(timer);
+      if (reduceMotion.matches) return;
+      timer = window.setTimeout(async () => {
+        if (!hovered && !focused && !document.hidden) await advance();
+        schedule();
+      }, INTERVAL);
+    };
+    banner.addEventListener('pointerenter', () => (hovered = true));
+    banner.addEventListener('pointerleave', () => (hovered = false));
+    // Only keyboard focus holds it; a mouse click also focuses the button.
+    banner.addEventListener('focusin', (e) => (focused = (e.target as Element).matches(':focus-visible')));
+    banner.addEventListener('focusout', () => (focused = false));
+    reduceMotion.addEventListener('change', schedule);
+
+    button.addEventListener('click', async () => {
+      await advance();
+      schedule();
+    });
+    schedule();
+  }
+</script>
 
 <style>
+  /* Night (dark mode) is the default, matching the site's tokens. */
   .banner {
+    --sky-top: #060a18;
+    --sky-bottom: #1a2446;
+    --fill: #0b1124;
+    --ink: #c9d3ea;
+    --ink-a: 0.9;
+    --stars: 1;
+    --orb-glow: rgba(246, 241, 220, 0.28);
+    --orb-size: 7%;
+    --disc: 1;
+
+    position: relative;
     margin-top: 24px;
-    height: clamp(150px, 30vw, 200px);
+    aspect-ratio: 3 / 1;
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    background: var(--surface);
+    overflow: hidden;
+    background: linear-gradient(var(--sky-top), var(--sky-bottom));
+    isolation: isolate;
+  }
+  :global(:root[data-theme='light']) .banner {
+    --sky-top: #b9d5ee;
+    --sky-bottom: #f3efe7;
+    --fill: rgba(255, 255, 255, 0.45);
+    --ink: #27272a;
+    --ink-a: 0.95;
+    --stars: 0;
+    --orb-glow: rgba(255, 228, 176, 0.75);
+    --orb-size: 34%;
+    --disc: 0;
+  }
+  @media (prefers-color-scheme: light) {
+    :global(:root:not([data-theme])) .banner {
+      --sky-top: #b9d5ee;
+      --sky-bottom: #f3efe7;
+      --fill: rgba(255, 255, 255, 0.45);
+      --ink: #27272a;
+      --ink-a: 0.95;
+      --stars: 0;
+      --orb-glow: rgba(255, 228, 176, 0.75);
+      --orb-size: 34%;
+      --disc: 0;
+    }
+  }
+
+  .sky, .scene { position: absolute; inset: 0; }
+  .stars { opacity: var(--stars); fill: #e8ecff; transition: opacity .4s var(--ease); }
+  .stars .tw { animation: twinkle 4s ease-in-out infinite alternate; }
+  .stars .tw:nth-child(3n) { animation-delay: -1.3s; }
+  .stars .tw:nth-child(3n + 1) { animation-delay: -2.6s; }
+  @keyframes twinkle { to { opacity: 0.15; } }
+
+  .scene { opacity: 0; transition: opacity .6s var(--ease); }
+  .scene.on { opacity: 1; }
+
+  .fill, .ink {
+    position: absolute;
+    inset: 0;
+    -webkit-mask: var(--fill-m) center / 100% 100% no-repeat;
+    mask: var(--fill-m) center / 100% 100% no-repeat;
+  }
+  .fill { background: var(--fill); }
+  .ink {
+    background: var(--ink);
+    opacity: var(--ink-a);
+    -webkit-mask-image: var(--ink-m);
+    mask-image: var(--ink-m);
+  }
+
+  /* Sun glow by day, moon by night, over the lowest part of the skyline. */
+  .orb {
+    position: absolute;
+    left: calc(var(--mx) * 100%);
+    top: calc(var(--my) * 100%);
+    width: var(--orb-size);
+    aspect-ratio: 1;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: radial-gradient(closest-side, var(--orb-glow), transparent);
+  }
+  .orb::after {
+    content: '';
+    position: absolute;
+    inset: 32%;
+    border-radius: 50%;
+    background: #f4efdc;
+    box-shadow: 0 0 10px rgba(244, 239, 220, 0.5);
+    opacity: var(--disc);
+  }
+
+  .place {
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    max-width: calc(100% - 20px);
+    font-size: 11.5px;
+    color: var(--text);
+    background: color-mix(in srgb, var(--bg) 72%, transparent);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 2px 8px;
+    transition: border-color .2s var(--ease);
+  }
+  .place:hover { border-color: var(--border-strong); }
+  .place svg { width: 11px; height: 11px; flex: none; fill: none; stroke: currentColor; stroke-width: 2; }
+  .place [data-name] { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  @media (max-width: 520px) {
+    .place { left: 6px; bottom: 6px; font-size: 10.5px; padding: 1px 6px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .scene { transition: none; }
+    .stars .tw { animation: none; }
   }
 </style>
