@@ -1,7 +1,8 @@
 ---
-// Ink sketches of places I've lived, drawn over a sky that follows the theme:
-// daytime in light mode, a starry night in dark mode. The ink and skyline-fill
-// layers are alpha masks, so the same drawing works in both themes.
+// Ink sketches of places I've lived, drawn over an evening sky that follows the
+// theme: a golden sunset in light mode, dusk with stars and today's moon in dark
+// mode. The ink and skyline-fill layers are alpha masks, so the same drawing
+// works in both themes.
 import la1Ink from '../assets/banner/la1-panorama-ink.webp';
 import la1Fill from '../assets/banner/la1-panorama-fill.webp';
 import chn1Ink from '../assets/banner/chn1-chennai-central-ink.webp';
@@ -206,13 +207,22 @@ const fullMoon = 'M0 -1A1 1 0 0 1 0 1A1 1 0 0 1 0 -1Z';
 </script>
 
 <style>
-  /* Night (dark mode) is the default, matching the site's tokens. */
+  /* Dusk (dark mode) is the default, matching the site's tokens. Sky colors are
+     the shared --eve-* tokens from global.css, with the brightest band at --h. */
   .banner {
-    --sky-top: #060a18;
-    --sky-bottom: #1a2446;
-    --fill: linear-gradient(var(--sky-top), var(--sky-bottom));
-    --ink: #c9d3ea;
-    --ink-a: 0.9;
+    --h: 62;
+    --sky: linear-gradient(
+      var(--eve-sky-0) 0%,
+      var(--eve-sky-1) calc(var(--h) * 0.52%),
+      var(--eve-sky-2) calc(var(--h) * 0.87%),
+      var(--eve-sky-3) calc(var(--h) * 1%),
+      var(--eve-sky-4) calc(var(--h) * 1% + 12%),
+      var(--eve-sky-5) 100%
+    );
+    /* The skyline fill repeats the sky, so buildings hide the stars, sun and moon without a visible edge. */
+    --fill: var(--sky);
+    --ink: var(--eve-ink);
+    --ink-a: var(--eve-ink-a);
     --stars: 1;
     --orb-glow: rgba(246, 241, 220, 0.28);
     --orb-size: 7%;
@@ -223,30 +233,20 @@ const fullMoon = 'M0 -1A1 1 0 0 1 0 1A1 1 0 0 1 0 -1Z';
     position: relative;
     aspect-ratio: 2.75 / 1;
     overflow: hidden;
-    background: linear-gradient(var(--sky-top), var(--sky-bottom));
+    background: var(--sky);
     isolation: isolate;
   }
   :global(:root[data-theme='light']) .banner {
-    --sky-top: #b9d5ee;
-    --sky-bottom: #f3efe7;
-    --fill: rgba(255, 255, 255, 0.45);
-    --ink: #27272a;
-    --ink-a: 0.95;
     --stars: 0;
-    --orb-glow: rgba(255, 228, 176, 0.75);
+    --orb-glow: var(--eve-sun);
     --orb-size: 34%;
     --disc: 0;
     --glow-o: 1;
   }
   @media (prefers-color-scheme: light) {
     :global(:root:not([data-theme])) .banner {
-      --sky-top: #b9d5ee;
-      --sky-bottom: #f3efe7;
-      --fill: rgba(255, 255, 255, 0.45);
-      --ink: #27272a;
-      --ink-a: 0.95;
       --stars: 0;
-      --orb-glow: rgba(255, 228, 176, 0.75);
+      --orb-glow: var(--eve-sun);
       --orb-size: 34%;
       --disc: 0;
       --glow-o: 1;
@@ -309,7 +309,7 @@ const fullMoon = 'M0 -1A1 1 0 0 1 0 1A1 1 0 0 1 0 -1Z';
     mask-image: var(--ink-m);
   }
 
-  /* Sun glow by day, moon by night, over the lowest part of the skyline. */
+  /* Setting sun in light mode, the moon at dusk, over the lowest part of the skyline. */
   .orb {
     position: absolute;
     left: calc(var(--mx) * 100%);

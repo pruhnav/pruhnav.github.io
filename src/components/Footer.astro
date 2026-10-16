@@ -1,17 +1,28 @@
 ---
 import { site, socials } from '../lib/site';
 import LinkIcon from './LinkIcon.astro';
+import Spider from './Spider.astro';
+
+interface Props {
+  /** The "open to roles" line and email; off for the personal pages. */
+  cta?: boolean;
+}
+const { cta = true } = Astro.props;
 const year = new Date().getFullYear();
 ---
 
 <footer class="wrap">
-  <div class="cta">
-    <p>Open to ML and software engineering roles.</p>
-    <a class="mail mono" href={`mailto:${site.email}`}><LinkIcon href={`mailto:${site.email}`} />{site.email}</a>
-  </div>
+  <slot name="art" />
+  {cta && (
+    <div class="cta">
+      <p>Open to ML and software engineering roles.</p>
+      <a class="mail mono" href={`mailto:${site.email}`}><LinkIcon href={`mailto:${site.email}`} />{site.email}</a>
+    </div>
+  )}
   <div class="bottom">
     <span class="mono">&copy; {year} {site.name}</span>
     <nav aria-label="Elsewhere">
+      <a class="hidden-door" href="/thwip/" aria-label="Personal notes"><Spider /></a>
       {socials.map((s) => (
         <a href={s.href} target="_blank" rel="noopener" aria-label={s.label}>
           <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d={s.icon} /></svg>
@@ -32,4 +43,7 @@ const year = new Date().getFullYear();
   nav { display: flex; gap: 14px; }
   nav a { color: var(--faint); transition: color .2s var(--ease); }
   nav a:hover { color: var(--text); }
+  /* The only way into /thwip/: dimmer than the socials, with a bigger tap area than it looks. */
+  .hidden-door { margin: -8px 4px -8px -8px; padding: 8px; opacity: .35; transition: opacity .2s var(--ease), color .2s var(--ease); }
+  .hidden-door:hover, .hidden-door:focus-visible { opacity: 1; }
 </style>

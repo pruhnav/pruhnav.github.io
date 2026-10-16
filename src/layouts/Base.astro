@@ -5,9 +5,11 @@ interface Props {
   title: string;
   description: string;
   ogImage?: string;
+  /** Keeps the page out of search results. */
+  noindex?: boolean;
 }
 
-const { title, description, ogImage } = Astro.props;
+const { title, description, ogImage, noindex = false } = Astro.props;
 // Fall back to the request URL when `site` is unavailable (e.g. during a dev config reload).
 const base = Astro.site ?? Astro.url;
 const canonical = new URL(Astro.url.pathname, base);
@@ -21,6 +23,7 @@ const ogImageUrl = ogImage ? new URL(ogImage, base).href : undefined;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
     <link rel="canonical" href={canonical} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <meta name="theme-color" content="#09090b" />

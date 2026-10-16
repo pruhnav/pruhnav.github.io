@@ -1,0 +1,14 @@
+---
+// Header art for /thwip/. For now, the Brooklyn Bridge (NY1). The sky runs up
+// behind the transparent header; the drawing starts below it.
+import EveningScene from './EveningScene.astro';
+import ny1Ink from '../assets/thwip/ny1-brooklyn-bridge-ink.webp';
+---
+
+<EveningScene
+  ink={ny1Ink}
+  horizon={62}
+  sun={{ x: 66, y: 56, size: 34 }}
+  skyAbove={56}
+  stars={{ count: 9, top: 3, bottom: 24, seed: 11 }}
+/>

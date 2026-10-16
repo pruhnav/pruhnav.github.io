@@ -1,7 +1,17 @@
 ---
 import Wordmark from './Wordmark.astro';
+import Spider from './Spider.astro';
 
-const links = [
+interface Props {
+  /** Pages other than the homepage: the wordmark links home and the section links are dropped. */
+  simple?: boolean;
+  /** Floats over the page's top artwork: transparent, no border, scrolls away with the page.
+      A spider hangs from the logo on a thread, swaying a little. */
+  overlay?: boolean;
+}
+const { simple = false, overlay = false } = Astro.props;
+
+const links = simple ? [] : [
   { href: '#experience', label: 'Experience' },
   { href: '#projects', label: 'Projects' },
   { href: '#research', label: 'Research' },
@@ -9,9 +19,10 @@ const links = [
 ];
 ---
 
-<header>
+<header class:list={{ overlay }}>
   <div class="wrap bar">
-    <a class="mark" href="#top" aria-label="nav, back to top"><Wordmark height={18} /></a>
+    <a class="mark" href={simple ? '/' : '#top'} aria-label={simple ? 'Home' : 'nav, back to top'}><Wordmark height={18} /></a>
+    {overlay && <span class="hang" aria-hidden="true"><span class="thread"></span><Spider size={16} /></span>}
     <nav aria-label="Sections">
       {links.map((l) => <a href={l.href}>{l.label}</a>)}
       <button class="theme" type="button" aria-label="Toggle colour theme" data-theme-toggle>
@@ -42,7 +53,37 @@ const links = [
     -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border);
   }
-  .bar { display: flex; align-items: center; justify-content: space-between; height: 56px; gap: 12px; }
+  header.overlay {
+    position: absolute;
+    left: 0;
+    right: 0;
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border-bottom: 0;
+  }
+  /* Hangs from the bottom tip of the logo's v: 61px in and 36px down, from Wordmark's
+     geometry at 18px tall (its v ends at x 296 of a 479-wide viewBox starting at -95). */
+  .hang {
+    position: absolute;
+    left: calc(var(--gutter) + 61px);
+    top: 36px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: var(--text);
+    transform: translateX(-50%) rotate(-3deg);
+    transform-origin: 50% 0;
+    animation: sway 5s ease-in-out infinite alternate;
+    pointer-events: none;
+  }
+  .thread { width: 1px; height: 58px; background: currentColor; opacity: .5; }
+  .hang :global(.spider) { margin-top: -3px; }
+  @keyframes sway {
+    from { transform: translateX(-50%) rotate(-3deg); }
+    to { transform: translateX(-50%) rotate(3deg); }
+  }
+  .bar { position: relative; display: flex; align-items: center; justify-content: space-between; height: 56px; gap: 12px; }
   .mark { display: flex; align-items: center; color: var(--text); transition: opacity .2s var(--ease); }
   .mark:hover { opacity: .75; }
   nav { display: flex; align-items: center; gap: 2px; }

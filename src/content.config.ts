@@ -49,4 +49,27 @@ const projects = defineCollection({
     }),
 });
 
-export const collections = { experience, projects };
+// Personal posts at /thwip/. Not linked from the nav; the footer spider is the only way in.
+const thoughts = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/thoughts' }),
+  schema: ({ image }) => z.object({
+    title: z.string(),
+    /** A line under the title, e.g. a song's artists. */
+    subtitle: z.string().optional(),
+    date: z.coerce.date(),
+    /** The section a post belongs to on /thwip/ (see src/lib/thoughts.ts); without one it goes under Thoughts. */
+    series: z.enum(['underlined']).optional(),
+    /** Where to listen, for posts about a song. */
+    spotify: z.url().optional(),
+    appleMusic: z.url().optional(),
+    /** The song's cover art; lyric cards (quotes) in the post take their colors from it. */
+    cover: image().optional(),
+    /** Lyric cards at the end of the post, under "More lines that I like from this song". */
+    moreLines: z.array(z.string()).default([]),
+    tags: z.array(z.string()).default([]),
+    /** Drafts show up in `npm run dev` but are left out of the built site. */
+    draft: z.boolean().default(false),
+  }),
+});
+
+export const collections = { experience, projects, thoughts };

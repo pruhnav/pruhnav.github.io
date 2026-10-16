@@ -1,4 +1,4 @@
-import { siDevpost, siDoi, siGithub, siIeee, siOrcid, siReplit } from 'simple-icons';
+import { siApplemusic, siDevpost, siDoi, siGithub, siIeee, siOrcid, siReplit, siSpotify } from 'simple-icons';
 import { socials } from './site';
 
 // simple-icons no longer ships LinkedIn, so reuse the path from the social links.
@@ -14,6 +14,8 @@ const byHost: [string, { path: string }][] = [
   ['doi.org', siDoi],
   ['ieee.org', siIeee],
   ['orcid.org', siOrcid],
+  ['spotify.com', siSpotify],
+  ['music.apple.com', siApplemusic],
 ];
 
 /** Brand logo for where a link goes (24x24 path), or undefined for hosts without one. */

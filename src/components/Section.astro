@@ -4,13 +4,27 @@ interface Props {
   title: string;
   /** Optional mono note shown on the right of the title row. */
   note?: string;
+  /**
+   * Title typeface: the pixel display font by default. The others are for /thwip/,
+   * which loads their font files itself (Bricolage Grotesque 800, Nanum Pen Script).
+   */
+  font?: 'display' | 'grotesk' | 'pen';
+  /** A hand-drawn pen stroke under the title. */
+  underline?: boolean;
 }
-const { id, title, note } = Astro.props;
+const { id, title, note, font = 'display', underline = false } = Astro.props;
 ---
 
 <section id={id} aria-labelledby={`${id}-title`}>
   <div class="head">
-    <h2 id={`${id}-title`}>{title}</h2>
+    <h2 id={`${id}-title`} class:list={[font, { underlined: underline }]}>
+      {title}
+      {underline && (
+        <svg viewBox="0 0 200 12" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M3 8c30-4 60-6 96-5s70 3 98 1" pathLength="1" />
+        </svg>
+      )}
+    </h2>
     {note && <span class="note">{note}</span>}
   </div>
   <slot />
@@ -25,6 +39,33 @@ const { id, title, note } = Astro.props;
     font-size: 26px;
     letter-spacing: .01em;
     line-height: 1;
+  }
+  h2.grotesk {
+    font-family: 'Bricolage Grotesque', var(--font-sans);
+    font-weight: 800;
+    font-size: 30px;
+    letter-spacing: -.02em;
+    line-height: 1.1;
+  }
+  h2.pen {
+    font-family: 'Nanum Pen Script', var(--font-sans);
+    font-weight: 400;
+    font-size: 46px;
+    letter-spacing: 0;
+    line-height: .9;
+  }
+  .underlined { position: relative; padding-bottom: 6px; }
+  .underlined svg { position: absolute; left: -2%; bottom: -4px; width: 104%; height: 12px; overflow: visible; }
+  .underlined path { fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; }
+  /* Where the browser supports it, the line draws itself as the heading scrolls into view. */
+  @supports (animation-timeline: view()) {
+    .underlined path {
+      stroke-dasharray: 1;
+      animation: draw linear both;
+      animation-timeline: view();
+      animation-range: entry 20% cover 40%;
+    }
+    @keyframes draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
   }
   .note { font-family: var(--font-mono); font-size: 12px; color: var(--faint); }
 </style>

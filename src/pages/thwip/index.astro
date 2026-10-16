@@ -1,0 +1,95 @@
+---
+// Section heading fonts for this page only (Latin subsets).
+import '@fontsource/bricolage-grotesque/latin-800.css';
+import '@fontsource/nanum-pen-script/latin-400.css';
+import Base from '../../layouts/Base.astro';
+import Header from '../../components/Header.astro';
+import ThwipBanner from '../../components/ThwipBanner.astro';
+import Section from '../../components/Section.astro';
+import OnRepeat from '../../components/OnRepeat.astro';
+import Footer from '../../components/Footer.astro';
+import ThwipFooterArt from '../../components/ThwipFooterArt.astro';
+import { getThoughts, sections, sectionOf, formatDate, isoDate } from '../../lib/thoughts';
+import { site } from '../../lib/site';
+
+const posts = await getThoughts();
+// One page, one section per series, like the homepage. Empty sections stay hidden.
+const filled = sections
+  .map((section) => ({ ...section, posts: posts.filter((p) => sectionOf(p).id === section.id) }))
+  .filter((s) => s.posts.length > 0);
+---
+
+<Base title={`thwip · ${site.name}`} description="Thoughts on stuff going on in my life and in the world." noindex>
+  <Header simple overlay />
+  <main class="wrap">
+    <ThwipBanner />
+    <div class="intro">
+      <h1>thwi<span class="p">p<svg class="cobweb" viewBox="0 0 10 10" aria-hidden="true"><path d="M0 0L9.6 0M0 0L8.31 4.8M0 0L4.8 8.31M0 0L0 9.6M3.2 0Q2.39 0.64 2.77 1.6Q1.75 1.75 1.6 2.77Q0.64 2.39 0 3.2M6.2 0Q4.63 1.24 5.37 3.1Q3.39 3.39 3.1 5.37Q1.24 4.63 0 6.2M9.2 0Q6.87 1.84 7.97 4.6Q5.03 5.03 4.6 7.97Q1.84 6.87 0 9.2" /></svg></span></h1>
+      <p>Thoughts on stuff going on in my life and in the world. You found the spider.</p>
+      <p>
+        This part of the site is about the Pranav behind the resume and the degree. You'll find my views on different
+        parts of life, plus regular updates on whatever I'm going through. Odds are hardly anyone will read this, but if
+        you ever make it here, let me know.
+      </p>
+    </div>
+    <OnRepeat />
+    {filled.map((s) => (
+      <Section id={s.id} title={s.title} font={s.font} underline={s.underline}>
+        {s.blurb && <p class="blurb">{s.blurb}</p>}
+        <ul class="posts">
+          {s.posts.map(({ id, data }) => (
+            <li>
+              <a href={`/thwip/${id}/`}>
+                <time class="mono" datetime={isoDate(data.date)}>{formatDate(data.date)}</time>
+                <span class="name">
+                  <span class="title">{data.title}</span>
+                  {data.subtitle && <span class="sub">{data.subtitle}</span>}
+                </span>
+                <span class="tags">
+                  {data.draft && <span class="chip">draft</span>}
+                  {data.tags.map((t) => <span class="chip">{t}</span>)}
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </Section>
+    ))}
+    {posts.length === 0 && <p class="empty mono">Nothing here yet.</p>}
+  </main>
+  <Footer cta={false}><ThwipFooterArt slot="art" /></Footer>
+</Base>
+
+<style>
+  .intro { padding: 28px 0 0; display: grid; gap: 10px; }
+  h1 {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 34px;
+    letter-spacing: .01em;
+    line-height: 1;
+  }
+  /* A small corner cobweb inside the bowl of the p. Measured from Doto 900: the hole
+     runs 0.097em to 0.4em across and sits 0.1em to 0.403em above the baseline. */
+  .p { position: relative; }
+  .cobweb {
+    position: absolute;
+    left: .097em;
+    top: calc(.95em - .403em);
+    width: .303em;
+    height: .303em;
+    overflow: visible;
+  }
+  .cobweb path { fill: none; stroke: currentColor; stroke-width: .7; stroke-linecap: round; opacity: .85; }
+  .intro p { color: var(--muted); font-size: 14px; max-width: 60ch; }  .blurb { color: var(--muted); font-size: 14px; margin: -8px 0 16px; max-width: 52ch; }
+  .posts { list-style: none; border-top: 1px solid var(--border); }
+  .posts li { border-bottom: 1px solid var(--border); }
+  .posts a { display: grid; grid-template-columns: 104px 1fr auto; gap: 12px; align-items: baseline; padding: 12px 0; }
+  .posts a:hover .title { text-decoration: underline; text-underline-offset: 3px; }
+  time { font-size: 12px; color: var(--faint); }
+  .name { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 8px; }
+  .title { font-size: 15px; font-weight: 500; }
+  .sub { font-size: 13px; color: var(--muted); }
+  .tags { display: flex; gap: 5px; }
+  .empty { margin-top: 32px; font-size: 13px; color: var(--faint); }
+</style>

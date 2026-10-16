@@ -1,0 +1,165 @@
+---
+// "Albums on repeat right now" on /thwip/: a row of covers that keeps drifting
+// sideways and pauses while you look (hover, touch or keyboard focus). Each
+// cover sits in front of a vinyl record that peeks out to the right, like a song
+// shared in an Instagram DM; hovering one slides its record out and spins it, and
+// the cover opens the album on Spotify.
+import { Image } from 'astro:assets';
+import Section from './Section.astro';
+import { onRepeat } from '../data/albums';
+
+// The list runs twice so the loop is seamless; the second copy is hidden from
+// screen readers and the keyboard.
+const loop = [...onRepeat, ...onRepeat];
+---
+
+<Section id="on-repeat" title="Albums on repeat right now" font="grotesk">
+  <div class="marquee" style={`--dur:${onRepeat.length * 6.5}s`}>
+    <ul class="track">
+      {loop.map((a, i) => {
+        const copy = i >= onRepeat.length;
+        return (
+          <li aria-hidden={copy ? 'true' : undefined}>
+            <a
+              class="album"
+              href={a.spotify}
+              target="_blank"
+              rel="noopener"
+              tabindex={copy ? -1 : undefined}
+              aria-label={`${a.title} by ${a.artist}, play on Spotify`}
+            >
+              <span class="vinyl" aria-hidden="true">
+                <span class="disc"><Image class="label" src={a.cover} width={200} alt="" /></span>
+              </span>
+              <span class="cover">
+                <Image src={a.cover} width={480} alt="" />
+                <svg class="play" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z" /></svg>
+                <span class="meta">
+                  <span class="title">{a.title}</span>
+                  <span class="artist">{a.artist}</span>
+                </span>
+              </span>
+            </a>
+          </li>
+        );
+      })}
+    </ul>
+  </div>
+</Section>
+
+<style>
+  /* Room above and below for the shadows, and soft edges where cards slide in and out. */
+  .marquee {
+    --gap: 20px;
+    overflow: hidden;
+    padding: 12px 0 18px;
+    margin: -12px 0 -18px;
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 40px, #000 calc(100% - 40px), transparent);
+    mask-image: linear-gradient(to right, transparent, #000 40px, #000 calc(100% - 40px), transparent);
+  }
+  .track {
+    list-style: none;
+    display: flex;
+    gap: var(--gap);
+    width: max-content;
+    animation: drift var(--dur) linear infinite;
+  }
+  /* Moving left by exactly one copy of the list (half the track, plus half a gap) lands on the same picture. */
+  @keyframes drift { to { transform: translateX(calc(-50% - var(--gap) / 2)); } }
+  .marquee:hover .track, .marquee:focus-within .track, .marquee:active .track { animation-play-state: paused; }
+  .track li { flex: none; width: 240px; }
+  @media (max-width: 520px) {
+    .track li { width: 210px; }
+  }
+  /* Without motion: a still row you can scroll yourself, without the repeat. */
+  @media (prefers-reduced-motion: reduce) {
+    .marquee { overflow-x: auto; -webkit-mask-image: none; mask-image: none; }
+    .track li[aria-hidden] { display: none; }
+  }
+
+  /* Cover on the left, record behind it showing about half its width on the right. */
+  .album { position: relative; display: block; aspect-ratio: 3 / 2; border-radius: 12px; }
+
+  .cover {
+    position: absolute;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    height: 100%;
+    aspect-ratio: 1;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+  }
+  .cover :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .cover::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(transparent 45%, rgba(0, 0, 0, 0.72));
+  }
+  .play {
+    position: absolute;
+    z-index: 1;
+    left: 10px;
+    top: 10px;
+    width: 18px;
+    height: 18px;
+    fill: #fff;
+    filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.5));
+  }
+  .meta {
+    position: absolute;
+    z-index: 1;
+    left: 11px;
+    right: 11px;
+    bottom: 10px;
+    display: grid;
+    gap: 1px;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  }
+  .title { font-size: 13.5px; font-weight: 600; line-height: 1.25; }
+  .artist { font-size: 12px; opacity: 0.85; }
+
+  .vinyl {
+    position: absolute;
+    top: 2%;
+    left: 34.7%;
+    height: 96%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.07);
+    transition: transform 0.5s var(--ease);
+  }
+  /* Grooves and the cover-art label turn; the light catching the record (::after) stays put. */
+  .disc {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: repeating-radial-gradient(circle, #0b0b0c 0 2px, #19191b 2px 3.5px);
+  }
+  .disc :global(.label) { width: 38%; height: 38%; border-radius: 50%; object-fit: cover; }
+  .disc::after {
+    content: '';
+    position: absolute;
+    width: 4%;
+    height: 4%;
+    border-radius: 50%;
+    background: var(--bg);
+  }
+  .vinyl::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: conic-gradient(from 20deg, transparent 0 8%, rgba(255, 255, 255, 0.09) 14%, transparent 22% 56%, rgba(255, 255, 255, 0.07) 63%, transparent 72%);
+    pointer-events: none;
+  }
+
+  .album:hover .vinyl, .album:focus-visible .vinyl { transform: translateX(7%); }
+  .album:hover .disc, .album:focus-visible .disc { animation: spin 3.5s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>

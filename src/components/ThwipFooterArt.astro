@@ -1,0 +1,16 @@
+---
+// Footer art for /thwip/: a Ford GT outside 3431 Ocean Blvd, Corona del Mar,
+// under the same evening sky as the header, with the sun setting over the water.
+import EveningScene from './EveningScene.astro';
+import carInk from '../assets/thwip/car2-ford-gt-ink.webp';
+---
+
+<EveningScene
+  ink={carInk}
+  horizon={34}
+  sun={{ x: 88, y: 31, size: 26 }}
+  glint
+  fadeTop
+  litGround
+  stars={{ count: 6, top: 12, bottom: 28, avoid: [[26, 40]], seed: 5 }}
+/>

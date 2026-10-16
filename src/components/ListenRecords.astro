@@ -1,0 +1,80 @@
+---
+// Where to listen, as two small vinyl records whose labels carry the service's logo.
+// Hovering one spins it; clicking opens the song there.
+import { siApplemusic, siSpotify } from 'simple-icons';
+
+interface Props {
+  spotify?: string;
+  appleMusic?: string;
+}
+const { spotify, appleMusic } = Astro.props;
+
+const records = [
+  spotify ? { href: spotify, name: 'Spotify', cls: 'spotify', icon: siSpotify.path } : null,
+  appleMusic ? { href: appleMusic, name: 'Apple Music', cls: 'apple', icon: siApplemusic.path } : null,
+].filter((r) => r !== null);
+---
+
+{records.length > 0 && (
+  <div class="records">
+    {records.map((r) => (
+      <a class:list={['record', r.cls]} href={r.href} target="_blank" rel="noopener" aria-label={`Listen on ${r.name}`} title={`Listen on ${r.name}`}>
+        <span class="disc">
+          <span class="label"><svg viewBox="0 0 24 24" aria-hidden="true"><path d={r.icon} /></svg></span>
+        </span>
+      </a>
+    ))}
+  </div>
+)}
+
+<style>
+  .records { display: flex; gap: 10px; flex: none; }
+  .record {
+    --size: 64px;
+    position: relative;
+    display: block;
+    width: var(--size);
+    height: var(--size);
+    border-radius: 50%;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.07);
+    transition: transform 0.3s var(--ease);
+  }
+  .record:hover, .record:focus-visible { transform: translateY(-2px) scale(1.04); }
+  /* Grooves and label turn; the light catching the record (::after) stays put. */
+  .disc {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: repeating-radial-gradient(circle, #0b0b0c 0 1.5px, #1a1a1c 1.5px 3px);
+  }
+  .record::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: conic-gradient(from 20deg, transparent 0 8%, rgba(255, 255, 255, 0.1) 14%, transparent 22% 56%, rgba(255, 255, 255, 0.08) 63%, transparent 72%);
+    pointer-events: none;
+  }
+  .record:hover .disc, .record:focus-visible .disc { animation: spin 2.4s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .label {
+    display: grid;
+    place-items: center;
+    width: 46%;
+    height: 46%;
+    border-radius: 50%;
+  }
+  .label svg { width: 82%; height: 82%; }
+  /* Spotify's green circle with dark waves; Apple Music's red tile with a white note. */
+  .spotify .label { background: #121212; }
+  .spotify .label svg { fill: #1db954; }
+  .apple .label { background: #fff; }
+  .apple .label svg { width: 70%; height: 70%; fill: #fa243c; }
+
+  @media (max-width: 520px) {
+    .record { --size: 52px; }
+  }
+</style>

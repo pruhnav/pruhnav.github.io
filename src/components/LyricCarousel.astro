@@ -1,0 +1,78 @@
+---
+// A row of lyric cards, one in view at a time, with arrows (and swipe) to step through.
+// Rendered inside the post's .prose, so the cards pick up the lyric card styles there.
+interface Props {
+  lines: string[];
+}
+const { lines } = Astro.props;
+---
+
+<div class="lyrics" data-lyrics>
+  <div class="track" tabindex="0" role="region" aria-label="More lyrics">
+    {lines.map((line) => (
+      <blockquote class="card">
+        <p>{line.split('\n').map((part, i) => <>{i > 0 && <br />}{part}</>)}</p>
+      </blockquote>
+    ))}
+  </div>
+  <div class="controls">
+    <div class="arrows">
+      <button type="button" data-prev aria-label="Previous lyric">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>
+      </button>
+      <button type="button" data-next aria-label="Next lyric">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" /></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-lyrics]').forEach((root) => {
+    const track = root.querySelector<HTMLElement>('.track')!;
+    const prev = root.querySelector<HTMLButtonElement>('[data-prev]')!;
+    const next = root.querySelector<HTMLButtonElement>('[data-next]')!;
+    const total = track.children.length;
+    const smooth = () => (matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth');
+    const index = () => Math.round(track.scrollLeft / track.clientWidth);
+    const update = () => {
+      const i = index();
+      prev.disabled = i === 0;
+      next.disabled = i === total - 1;
+    };
+    const go = (step: number) => track.scrollTo({ left: (index() + step) * track.clientWidth, behavior: smooth() });
+    prev.addEventListener('click', () => go(-1));
+    next.addEventListener('click', () => go(1));
+    track.addEventListener('scroll', () => requestAnimationFrame(update), { passive: true });
+    update();
+  });
+</script>
+
+<style>
+  .track {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    border-radius: 16px;
+  }
+  .track::-webkit-scrollbar { display: none; }
+  .track .card { flex: 0 0 100%; margin: 0; scroll-snap-align: start; }
+
+  .controls { display: flex; justify-content: flex-end; margin-top: 12px; }
+  .arrows { display: flex; gap: 8px; }
+  .arrows button {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    transition: border-color .2s var(--ease), background .2s var(--ease), opacity .2s var(--ease);
+  }
+  .arrows button:hover:not(:disabled) { border-color: var(--border-strong); background: var(--surface-2); }
+  .arrows button:disabled { opacity: .35; cursor: default; }
+  .arrows svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+</style>

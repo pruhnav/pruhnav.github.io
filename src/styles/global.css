@@ -25,6 +25,22 @@
   --heat-3: #a1a1aa;
   --heat-4: #fafafa;
 
+  /* Evening sky behind the ink sketches (EveningScene, Banner): dusk here, a golden sunset in light mode.
+     sky-0 to sky-3 run from the top of the sky to the horizon, sky-4 and sky-5 from below it to the ground. */
+  --eve-sky-0: #211d3d;
+  --eve-sky-1: #573060;
+  --eve-sky-2: #b4554f;
+  --eve-sky-3: #e8884f;
+  --eve-sky-4: #6a3a3f;
+  --eve-sky-5: #2c1d2b;
+  /* A warmer ground, for scenes whose subject sits low in the frame. */
+  --eve-ground-4: #9a5a50;
+  --eve-ground-5: #6a4350;
+  --eve-sun: rgba(255, 178, 110, 0.6);
+  --eve-glint: rgba(255, 196, 130, 0.55);
+  --eve-ink: #100a14;
+  --eve-ink-a: 0.9;
+
   --font-display: 'Doto', ui-monospace, monospace;
   --font-sans: 'Geist Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-mono: 'Geist Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace;
@@ -54,6 +70,18 @@
   --heat-2: #a1a1aa;
   --heat-3: #52525b;
   --heat-4: #09090b;
+  --eve-sky-0: #8d9fd6;
+  --eve-sky-1: #d9a2b6;
+  --eve-sky-2: #f3ad8b;
+  --eve-sky-3: #fbd49a;
+  --eve-sky-4: #f6d3a8;
+  --eve-sky-5: #efd9c2;
+  --eve-ground-4: #f6d3a8;
+  --eve-ground-5: #efd9c2;
+  --eve-sun: rgba(255, 240, 196, 0.95);
+  --eve-glint: rgba(255, 246, 214, 0.9);
+  --eve-ink: #2a1f2d;
+  --eve-ink-a: 0.94;
   color-scheme: light;
 }
 
@@ -77,6 +105,18 @@
     --heat-2: #a1a1aa;
     --heat-3: #52525b;
     --heat-4: #09090b;
+    --eve-sky-0: #8d9fd6;
+    --eve-sky-1: #d9a2b6;
+    --eve-sky-2: #f3ad8b;
+    --eve-sky-3: #fbd49a;
+    --eve-sky-4: #f6d3a8;
+    --eve-sky-5: #efd9c2;
+    --eve-ground-4: #f6d3a8;
+    --eve-ground-5: #efd9c2;
+    --eve-sun: rgba(255, 240, 196, 0.95);
+    --eve-glint: rgba(255, 246, 214, 0.9);
+    --eve-ink: #2a1f2d;
+    --eve-ink-a: 0.94;
     color-scheme: light;
   }
 }
