@@ -7,6 +7,8 @@ start: Jun 2023
 end: Oct 2023
 tags: [Python, Pandas, SQL, Dataiku, ETL]
 mono: mR
+logo: ../../assets/logos/mresult.png
+logoBg: "#ffffff"
 order: 4
 ---
 

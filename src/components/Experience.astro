@@ -20,7 +20,7 @@ const items = await Promise.all(roles.map(async (r) => ({ ...r, Content: (await 
           : <><LinkIcon href={link.href} />{link.label}</>;
       const head = (
         <div class="row">
-          <div class="logo" aria-hidden="true">
+          <div class="logo" aria-hidden="true" style={data.logoBg ? `background:${data.logoBg}` : undefined}>
             {data.logo ? <Image src={data.logo} alt="" width={64} height={64} /> : <span class={data.mono.length === 1 ? "glyph" : undefined}>{data.mono}</span>}
           </div>
           <div class="main">

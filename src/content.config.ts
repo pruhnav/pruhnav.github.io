@@ -15,6 +15,8 @@ const experience = defineCollection({
       end: z.string().optional(),
       tags: z.array(z.string()).default([]),
       logo: image().optional(),
+      /** Tile color behind the logo, for marks that need a light background to read (e.g. "#ffffff"). */
+      logoBg: z.string().optional(),
       mono: z.string().max(3),
       /** An icon replaces the trailing arrow and sits before the label. */
       links: z.array(z.object({ label: z.string(), href: z.url(), icon: image().optional() })).default([]),
@@ -36,6 +38,8 @@ const projects = defineCollection({
       demo: z.url().optional(),
       /** Published paper for the project; shows a "Paper" link on featured cards. */
       paper: z.url().optional(),
+      /** Coverage of the project, such as an organizer's post; shows a "Media" link on featured cards. */
+      media: z.url().optional(),
       badge: z.string().optional(),
       /** Colors the badge: gold for wins, psu for Penn State work (adds the lion), oss for open source (adds the GitHub mark). */
       badgeTone: z.enum(['gold', 'psu', 'oss']).optional(),

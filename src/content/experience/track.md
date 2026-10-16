@@ -3,6 +3,8 @@ company: Penn State Harrisburg
 role: Men's Track & Field
 location: Pennsylvania
 mono: TF
+logo: ../../assets/logos/psu-athletics.png
+logoBg: "#ffffff"
 links:
   - label: Roster
     href: https://psuharrisburgsports.com/sports/mens-track-and-field/roster/pranav-balachander/4383

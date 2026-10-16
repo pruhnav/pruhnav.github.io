@@ -7,6 +7,8 @@ start: Jun 2025
 end: Sep 2025
 tags: [React, Python, RAG, LangChain, OpenAI]
 mono: SBS
+logo: ../../assets/logos/sbs.png
+logoBg: "#ffffff"
 order: 3
 ---
 

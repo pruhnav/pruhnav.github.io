@@ -6,9 +6,11 @@ start: Apr 2025
 end: May 2026
 tags: [TensorFlow, Keras, Python, Pandas, Scikit-learn]
 mono: PSU
+logo: ../../assets/logos/penn-state.png
+logoBg: "#ffffff"
 order: 2
 ---
 
-- Engineered a hybrid **CNN-BiLSTM-Attention** forecasting model in Python (TensorFlow, Keras) that cut RMSE ~25% (12.40 vs 16.49) and raised R² to 0.87 (from 0.63) against the strongest baselines on real-world electricity-price data.
-- Built end-to-end ML data pipelines fusing quantum-chemistry, epidemiological, and genomic datasets into unified spatiotemporal models using Python, Pandas, NumPy, and Scikit-learn.
-- Published a peer-reviewed paper in **IEEE Data Descriptions** (2025), curating a standardized dataset spanning 40 markets across 5 continents.
+- Built end-to-end Python pipelines with **Pandas, NumPy, and Scikit-learn**, fusing quantum-chemistry, epidemiological, and genomic sources into analysis-ready datasets across three concurrent research projects.
+- Applied **SHAP** across models to surface feature importance and make predictions interpretable and auditable.
+- Authored **three research papers** as a named author, spanning electricity price forecasting, Arctic mercury modeling, and pesticide-resistance surveillance, and presented the work at conferences including **Harvard's National Collegiate Research Conference**.

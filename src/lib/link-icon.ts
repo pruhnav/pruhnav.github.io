@@ -1,6 +1,12 @@
 import { siDevpost, siDoi, siGithub, siIeee, siOrcid, siReplit } from 'simple-icons';
+import { socials } from './site';
+
+// simple-icons no longer ships LinkedIn, so reuse the path from the social links.
+const linkedin = { path: socials.find((s) => s.label === 'LinkedIn')!.icon };
 
 const byHost: [string, { path: string }][] = [
+  ['linkedin.com', linkedin],
+  ['lnkd.in', linkedin],
   ['github.com', siGithub],
   ['devpost.com', siDevpost],
   ['replit.app', siReplit],

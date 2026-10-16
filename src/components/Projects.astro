@@ -40,6 +40,7 @@ const rest = all.filter((p) => !p.data.featured);
               <div class="tags">{data.tags.map((t) => <span class="chip">{t}</span>)}</div>
               <div class="links">
                 {data.demo && <a class="link-arrow" href={data.demo} target="_blank" rel="noopener"><LinkIcon href={data.demo} />Live</a>}
+                {data.media && <a class="link-arrow" href={data.media} target="_blank" rel="noopener"><LinkIcon href={data.media} />Media</a>}
                 {data.paper && <a class="link-arrow" href={data.paper} target="_blank" rel="noopener"><LinkIcon href={data.paper} />Paper</a>}
                 {data.repo && <a class="link-arrow" href={data.repo} target="_blank" rel="noopener"><LinkIcon href={data.repo} />Code</a>}
               </div>
@@ -110,7 +111,31 @@ const rest = all.filter((p) => !p.data.featured);
     border-radius: 6px;
     padding: 1px 7px;
   }
-  .badge.gold { color: var(--surface); border-color: var(--gold); background: var(--gold); font-weight: 500; }
+  /* Wins get a gold badge with a light sweeping across it now and then. */
+  .badge.gold {
+    position: relative;
+    overflow: hidden;
+    color: #09090b;
+    font-weight: 600;
+    border-color: var(--gold);
+    background: var(--gold);
+  }
+  .badge.gold::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, 0.7) 50%, transparent 65%);
+    transform: translateX(-120%);
+    animation: shine 4s ease-in-out 1s infinite;
+    pointer-events: none;
+  }
+  @keyframes shine {
+    0% { transform: translateX(-120%); }
+    30%, 100% { transform: translateX(120%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .badge.gold::after { animation: none; display: none; }
+  }
   .badge.psu, .badge.oss { display: inline-flex; align-items: center; gap: 5px; color: #fff; font-weight: 500; }
   .badge.psu { border-color: var(--psu); background: var(--psu); }
   .badge.oss { border-color: var(--oss); background: var(--oss); }
@@ -119,6 +144,8 @@ const rest = all.filter((p) => !p.data.featured);
   .foot { margin-top: auto; padding-top: 4px; display: flex; justify-content: space-between; align-items: flex-end; gap: 10px; flex-wrap: wrap; }
   .tags { display: flex; flex-wrap: wrap; gap: 5px; }
   .links { display: flex; gap: 12px; }
+  /* Same height as a tag chip (24px), so links line up with the chip row's middle. */
+  .links a { padding-block: 2px; }
 
   .sub { font-size: 12px; font-weight: 400; color: var(--faint); margin: 32px 0 8px; text-transform: uppercase; letter-spacing: .06em; }
   .rest { list-style: none; border-top: 1px solid var(--border); }
