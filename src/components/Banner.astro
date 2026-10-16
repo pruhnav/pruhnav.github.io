@@ -4,22 +4,26 @@
 // layers are alpha masks, so the same drawing works in both themes.
 import la1Ink from '../assets/banner/la1-panorama-ink.webp';
 import la1Fill from '../assets/banner/la1-panorama-fill.webp';
-import pa4Ink from '../assets/banner/pa4-state-college-ink.webp';
-import pa4Fill from '../assets/banner/pa4-state-college-fill.webp';
-import ny1Ink from '../assets/banner/ny1-brooklyn-bridge-ink.webp';
-import ny1Fill from '../assets/banner/ny1-brooklyn-bridge-fill.webp';
+import chn1Ink from '../assets/banner/chn1-chennai-central-ink.webp';
+import chn1Fill from '../assets/banner/chn1-chennai-central-fill.webp';
+import mnp4Ink from '../assets/banner/mnp4-edu-ink.webp';
+import mnp4Fill from '../assets/banner/mnp4-edu-fill.webp';
 import pa3Ink from '../assets/banner/pa3-harrisburg-ink.webp';
 import pa3Fill from '../assets/banner/pa3-harrisburg-fill.webp';
-import la2Ink from '../assets/banner/la2-griffith-ink.webp';
-import la2Fill from '../assets/banner/la2-griffith-fill.webp';
+import pa4Ink from '../assets/banner/pa4-state-college-ink.webp';
+import pa4Fill from '../assets/banner/pa4-state-college-fill.webp';
+import sf2Ink from '../assets/banner/sf2-embarcadero-ink.webp';
+import sf2Fill from '../assets/banner/sf2-embarcadero-fill.webp';
 
-// Cycle order. mx/my place the sun or moon over the lowest stretch of skyline.
+// Cycle order follows where I've lived. mx/my place the sun or moon over the
+// lowest stretch of skyline.
 const places = [
-  { name: 'Los Angeles', ink: la1Ink, fill: la1Fill, mx: 0.9, my: 0.23 },
-  { name: 'Old Main, State College', ink: pa4Ink, fill: pa4Fill, mx: 0.9, my: 0.19 },
-  { name: 'Brooklyn Bridge, New York', ink: ny1Ink, fill: ny1Fill, mx: 0.17, my: 0.21 },
-  { name: 'State Capitol, Harrisburg', ink: pa3Ink, fill: pa3Fill, mx: 0.87, my: 0.22 },
-  { name: 'Griffith Observatory, Los Angeles', ink: la2Ink, fill: la2Fill, mx: 0.59, my: 0.21 },
+  { name: 'Los Angeles, California', ink: la1Ink, fill: la1Fill, mx: 0.9, my: 0.26 },
+  { name: 'Chennai, India', ink: chn1Ink, fill: chn1Fill, mx: 0.86, my: 0.28 },
+  { name: 'Manipal, India', ink: mnp4Ink, fill: mnp4Fill, mx: 0.87, my: 0.17 },
+  { name: 'Harrisburg, Pennsylvania', ink: pa3Ink, fill: pa3Fill, mx: 0.87, my: 0.24 },
+  { name: 'State College, Pennsylvania', ink: pa4Ink, fill: pa4Fill, mx: 0.9, my: 0.22 },
+  { name: 'San Francisco, California', ink: sf2Ink, fill: sf2Fill, mx: 0.57, my: 0.29 },
 ];
 
 // Masks are pre-encoded WebP (lossy alpha), so they're used as-is rather than re-encoded.
@@ -39,6 +43,8 @@ const stars = Array.from({ length: 48 }, () => ({
   tw: rand() < 0.25,
 }));
 const first = slides[0];
+// Server-rendered moon is full; the inline script swaps in today's phase.
+const fullMoon = 'M0 -1A1 1 0 0 1 0 1A1 1 0 0 1 0 -1Z';
 ---
 
 <div class="banner" id="top" data-banner data-slides={JSON.stringify(slides)}>
@@ -46,22 +52,37 @@ const first = slides[0];
     <svg class="stars" width="100%" height="100%">
       {stars.map((s) => <circle class:list={{ tw: s.tw }} cx={`${s.x}%`} cy={`${s.y}%`} r={s.r} opacity={s.o} />)}
     </svg>
+    <div class="meteors" data-meteors></div>
   </div>
   <div class="scene on" style={vars(first)} aria-hidden="true">
-    <span class="orb"></span><span class="fill"></span><span class="ink"></span>
+    <span class="orb"><svg class="moon" viewBox="-1 -1 2 2"><circle class="dark" r="1" /><path class="lit" d={fullMoon} /></svg></span><span class="fill"></span><span class="ink"></span>
   </div>
   <div class="scene" aria-hidden="true">
-    <span class="orb"></span><span class="fill"></span><span class="ink"></span>
+    <span class="orb"><svg class="moon" viewBox="-1 -1 2 2"><circle class="dark" r="1" /><path class="lit" d={fullMoon} /></svg></span><span class="fill"></span><span class="ink"></span>
   </div>
+  <span class="edges" aria-hidden="true"></span>
   <button class="place mono" type="button" data-next aria-label={`Showing ${first.name}. Show the next place`}>
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11Z" /><circle cx="12" cy="10" r="2.3" /></svg>
     <span data-name>{first.name}</span>
   </button>
 </div>
 <script is:inline>
-  // Pick a random place before first paint so the default never flashes.
+  // Before first paint: draw today's moon phase, then pick a random place.
   (function () {
     var b = document.currentScript.previousElementSibling;
+
+    // Moon phase (0 new, 0.5 full) from the mean synodic month, counted from
+    // the new moon of 2000-01-06 18:14 UTC. Drawn with the lit side on the
+    // right while waxing, as seen from the northern hemisphere.
+    var phase = ((Date.now() - Date.UTC(2000, 0, 6, 18, 14)) / 864e5 / 29.530588853) % 1;
+    if (phase < 0) phase += 1;
+    var lit = (1 - Math.cos(2 * Math.PI * phase)) / 2;
+    var rx = Math.abs(Math.cos(2 * Math.PI * phase)).toFixed(3);
+    var waxing = phase < 0.5;
+    var d = 'M0 -1A1 1 0 0 ' + (waxing ? 1 : 0) + ' 0 1A' + rx + ' 1 0 0 ' + (waxing !== lit < 0.5 ? 1 : 0) + ' 0 -1Z';
+    b.querySelectorAll('.moon .lit').forEach(function (el) { el.setAttribute('d', d); });
+    b.style.setProperty('--moon-lit', lit.toFixed(2));
+
     var slides = JSON.parse(b.getAttribute('data-slides'));
     var i = Math.floor(Math.random() * slides.length);
     b.setAttribute('data-index', String(i));
@@ -121,29 +142,27 @@ const first = slides[0];
       scenes[front].classList.remove('on');
       front = 1 - front;
       index = next;
-      name.textContent = slides[next].name;
+      // Swap the caption halfway through the 0.6s crossfade so it matches the picture.
+      window.setTimeout(() => (name.textContent = slides[next].name), reduceMotion.matches ? 0 : 300);
       button.setAttribute('aria-label', `Showing ${slides[next].name}. Show the next place`);
       busy = false;
       warmNext();
     };
 
-    // Auto-advance every 10 seconds. Holds while the banner is hovered or focused
-    // or the tab is in the background, and stays off for reduced-motion users.
-    const INTERVAL = 10_000;
+    // Auto-advance every 5 seconds. Holds while the banner has keyboard focus or
+    // the tab is in the background, and stays off for reduced-motion users.
+    const INTERVAL = 5_000;
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-    let hovered = false;
     let focused = false;
     let timer: number | undefined;
     const schedule = () => {
       window.clearTimeout(timer);
       if (reduceMotion.matches) return;
       timer = window.setTimeout(async () => {
-        if (!hovered && !focused && !document.hidden) await advance();
+        if (!focused && !document.hidden) await advance();
         schedule();
       }, INTERVAL);
     };
-    banner.addEventListener('pointerenter', () => (hovered = true));
-    banner.addEventListener('pointerleave', () => (hovered = false));
     // Only keyboard focus holds it; a mouse click also focuses the button.
     banner.addEventListener('focusin', (e) => (focused = (e.target as Element).matches(':focus-visible')));
     banner.addEventListener('focusout', () => (focused = false));
@@ -154,6 +173,35 @@ const first = slides[0];
       schedule();
     });
     schedule();
+
+    // Shooting stars, night sky only: one every 4 to 11 seconds, each with its
+    // own start point, direction, length and speed. They live in the sky layer,
+    // so the skyline fill hides them behind buildings.
+    const meteors = banner.querySelector<HTMLElement>('[data-meteors]')!;
+    const between = (lo: number, hi: number) => lo + Math.random() * (hi - lo);
+    const isNight = () => getComputedStyle(banner).getPropertyValue('--stars').trim() === '1';
+    const shoot = () => {
+      const w = banner.clientWidth;
+      const rightward = Math.random() < 0.5;
+      const len = w * between(0.08, 0.14);
+      const el = document.createElement('span');
+      el.className = 'meteor';
+      el.style.setProperty('--x', `${between(rightward ? 8 : 35, rightward ? 60 : 88)}%`);
+      el.style.setProperty('--y', `${between(4, 30)}%`);
+      el.style.setProperty('--angle', `${rightward ? between(18, 34) : between(146, 162)}deg`);
+      el.style.setProperty('--len', `${len}px`);
+      el.style.setProperty('--travel', `${len * between(1.6, 2.4)}px`);
+      el.style.setProperty('--dur', `${between(0.7, 1.1)}s`);
+      el.addEventListener('animationend', () => el.remove());
+      meteors.append(el);
+    };
+    const queueMeteor = () => {
+      window.setTimeout(() => {
+        if (isNight() && !document.hidden && !reduceMotion.matches) shoot();
+        queueMeteor();
+      }, between(4000, 11000));
+    };
+    queueMeteor();
   }
 </script>
 
@@ -162,19 +210,18 @@ const first = slides[0];
   .banner {
     --sky-top: #060a18;
     --sky-bottom: #1a2446;
-    --fill: #0b1124;
+    --fill: linear-gradient(var(--sky-top), var(--sky-bottom));
     --ink: #c9d3ea;
     --ink-a: 0.9;
     --stars: 1;
     --orb-glow: rgba(246, 241, 220, 0.28);
     --orb-size: 7%;
     --disc: 1;
+    --glow-o: calc(0.25 + 0.75 * var(--moon-lit, 1));
 
+    /* No frame: it hangs from the header and fades into the page at the sides and bottom. */
     position: relative;
-    margin-top: 24px;
-    aspect-ratio: 3 / 1;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
+    aspect-ratio: 2.75 / 1;
     overflow: hidden;
     background: linear-gradient(var(--sky-top), var(--sky-bottom));
     isolation: isolate;
@@ -189,6 +236,7 @@ const first = slides[0];
     --orb-glow: rgba(255, 228, 176, 0.75);
     --orb-size: 34%;
     --disc: 0;
+    --glow-o: 1;
   }
   @media (prefers-color-scheme: light) {
     :global(:root:not([data-theme])) .banner {
@@ -201,6 +249,7 @@ const first = slides[0];
       --orb-glow: rgba(255, 228, 176, 0.75);
       --orb-size: 34%;
       --disc: 0;
+      --glow-o: 1;
     }
   }
 
@@ -210,6 +259,38 @@ const first = slides[0];
   .stars .tw:nth-child(3n) { animation-delay: -1.3s; }
   .stars .tw:nth-child(3n + 1) { animation-delay: -2.6s; }
   @keyframes twinkle { to { opacity: 0.15; } }
+
+  .meteors { position: absolute; inset: 0; opacity: var(--stars); }
+  .meteors :global(.meteor) {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    width: var(--len);
+    height: 1.5px;
+    border-radius: 1px;
+    background: linear-gradient(90deg, rgba(232, 236, 255, 0), rgba(232, 236, 255, 0.9));
+    transform-origin: right center;
+    opacity: 0;
+    animation: meteor var(--dur) ease-out forwards;
+  }
+  .meteors :global(.meteor)::after {
+    content: '';
+    position: absolute;
+    right: -1px;
+    top: 50%;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 0 6px 1px rgba(232, 236, 255, 0.8);
+    transform: translateY(-50%);
+  }
+  @keyframes meteor {
+    0% { opacity: 0; transform: rotate(var(--angle)) translateX(0); }
+    12% { opacity: 1; }
+    70% { opacity: 1; }
+    100% { opacity: 0; transform: rotate(var(--angle)) translateX(var(--travel)); }
+  }
 
   .scene { opacity: 0; transition: opacity .6s var(--ease); }
   .scene.on { opacity: 1; }
@@ -236,24 +317,44 @@ const first = slides[0];
     width: var(--orb-size);
     aspect-ratio: 1;
     transform: translate(-50%, -50%);
-    border-radius: 50%;
-    background: radial-gradient(closest-side, var(--orb-glow), transparent);
   }
-  .orb::after {
+  .orb::before {
     content: '';
     position: absolute;
-    inset: 32%;
+    inset: 0;
     border-radius: 50%;
-    background: #f4efdc;
-    box-shadow: 0 0 10px rgba(244, 239, 220, 0.5);
+    background: radial-gradient(closest-side, var(--orb-glow), transparent);
+    opacity: var(--glow-o);
+  }
+  /* Today's moon: a faint full disc with the lit part on top. */
+  .moon {
+    position: absolute;
+    inset: 32%;
+    width: 36%;
+    height: 36%;
+    overflow: visible;
     opacity: var(--disc);
+    filter: drop-shadow(0 0 3px rgba(244, 239, 220, 0.45));
+  }
+  .moon .dark { fill: #f4efdc; opacity: 0.1; }
+  .moon .lit { fill: #f4efdc; }
+
+  .edges {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    --edge: 32px;
+    background:
+      linear-gradient(to right, var(--bg), transparent var(--edge), transparent calc(100% - var(--edge)), var(--bg)),
+      linear-gradient(to top, var(--bg), transparent 48px);
   }
 
   .place {
     position: absolute;
     left: 10px;
     bottom: 10px;
-    z-index: 1;
+    z-index: 2;
     display: inline-flex;
     align-items: center;
     gap: 5px;
@@ -274,6 +375,7 @@ const first = slides[0];
 
   @media (max-width: 520px) {
     .place { left: 6px; bottom: 6px; font-size: 10.5px; padding: 1px 6px; }
+    .edges { --edge: 18px; }
   }
 
   @media (prefers-reduced-motion: reduce) {
