@@ -20,9 +20,11 @@ const year = new Date().getFullYear();
     </div>
   )}
   <div class="bottom">
-    <span class="mono">&copy; {year} {site.name}</span>
-    <nav aria-label="Elsewhere">
+    <span class="me">
+      <span class="mono">&copy; {year} {site.name}</span>
       <a class="hidden-door" href="/thwip/" aria-label="Personal notes"><Spider /></a>
+    </span>
+    <nav aria-label="Elsewhere">
       {socials.map((s) => (
         <a href={s.href} target="_blank" rel="noopener" aria-label={s.label}>
           <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d={s.icon} /></svg>
@@ -43,7 +45,8 @@ const year = new Date().getFullYear();
   nav { display: flex; gap: 14px; }
   nav a { color: var(--faint); transition: color .2s var(--ease); }
   nav a:hover { color: var(--text); }
-  /* The only way into /thwip/: dimmer than the socials, with a bigger tap area than it looks. */
-  .hidden-door { margin: -8px 4px -8px -8px; padding: 8px; opacity: .35; transition: opacity .2s var(--ease), color .2s var(--ease); }
-  .hidden-door:hover, .hidden-door:focus-visible { opacity: 1; }
+  .me { display: inline-flex; align-items: center; }
+  /* The only way into /thwip/: a faint spider right after the name, with a bigger tap area than it looks. */
+  .hidden-door { margin: -8px -8px -8px -2px; padding: 8px; color: var(--faint); opacity: .35; transition: opacity .2s var(--ease), color .2s var(--ease); }
+  .hidden-door:hover, .hidden-door:focus-visible { opacity: 1; color: var(--text); }
 </style>
