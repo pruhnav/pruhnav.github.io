@@ -12,6 +12,11 @@ moreLines:
     Ever since you left me, I’m losin’ my mind, uh
   - Say you wanna change your life, then why don’t you?
   - I’d trade my dreams for something good, come back
+playlistsIntro: "If you like this song, you'll probably like songs from this playlist:"
+playlists:
+  - title: w/o
+    spotify: https://open.spotify.com/playlist/7iqlm7O4ycsGCQxwxmU9R1
+    cover: ../../assets/thoughts/playlist-wo.jpg
 ---
 
 I just wanna start off by saying Yebba's voice is angelic. It just gives off that dead wife aesthetic, and that's honestly how one usually feels. The person that loved you no longer exists, and the new version of them doesn't love you. You may have changed for the better, but if someone has decided that they're done, nothing you say or do will matter.

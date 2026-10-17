@@ -6,25 +6,29 @@ interface Props {
   note?: string;
   /**
    * Title typeface: the pixel display font by default. The others are for /thwip/,
-   * which loads their font files itself (Bricolage Grotesque 800, Nanum Pen Script).
+   * which loads their font files itself (Bricolage Grotesque 800, Nanum Pen Script, Instrument Serif, Monoton,
+   * Climate Crisis).
    */
-  font?: 'display' | 'grotesk' | 'pen';
+  font?: 'display' | 'grotesk' | 'pen' | 'serif' | 'neon' | 'melt';
   /** A hand-drawn pen stroke under the title. */
   underline?: boolean;
+  /** A part inside another section: a smaller h3 heading and no padding of its own. */
+  sub?: boolean;
 }
-const { id, title, note, font = 'display', underline = false } = Astro.props;
+const { id, title, note, font = 'display', underline = false, sub = false } = Astro.props;
+const Heading = sub ? 'h3' : 'h2';
 ---
 
-<section id={id} aria-labelledby={`${id}-title`}>
+<section id={id} aria-labelledby={`${id}-title`} class:list={{ sub }}>
   <div class="head">
-    <h2 id={`${id}-title`} class:list={[font, { underlined: underline }]}>
+    <Heading id={`${id}-title`} class:list={['heading', font, { underlined: underline }]}>
       {title}
       {underline && (
         <svg viewBox="0 0 200 12" preserveAspectRatio="none" aria-hidden="true">
           <path d="M3 8c30-4 60-6 96-5s70 3 98 1" pathLength="1" />
         </svg>
       )}
-    </h2>
+    </Heading>
     {note && <span class="note">{note}</span>}
   </div>
   <slot />
@@ -32,28 +36,59 @@ const { id, title, note, font = 'display', underline = false } = Astro.props;
 
 <style>
   section { padding: 56px 0 8px; }
+  section.sub { padding: 0; }
+  .head + .sub { margin-top: 32px; }
+  .sub + .sub { margin-top: 44px; }
   .head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 20px; }
-  h2 {
+  .sub .head { margin-bottom: 16px; }
+  .heading {
     font-family: var(--font-display);
     font-weight: 900;
     font-size: 26px;
     letter-spacing: .01em;
     line-height: 1;
   }
-  h2.grotesk {
+  .heading.grotesk {
     font-family: 'Bricolage Grotesque', var(--font-sans);
     font-weight: 800;
     font-size: 30px;
     letter-spacing: -.02em;
     line-height: 1.1;
   }
-  h2.pen {
+  .heading.pen {
     font-family: 'Nanum Pen Script', var(--font-sans);
     font-weight: 400;
     font-size: 46px;
     letter-spacing: 0;
     line-height: .9;
   }
+  .heading.serif {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-weight: 400;
+    font-size: 44px;
+    letter-spacing: -.01em;
+    line-height: .95;
+  }
+  /* Neon-tube outlines, like record grooves. */
+  .heading.neon {
+    font-family: 'Monoton', var(--font-sans);
+    font-weight: 400;
+    font-size: 44px;
+    letter-spacing: .02em;
+    line-height: 1;
+  }
+  /* Heavy letters that look a little melted, for the hot takes. */
+  .heading.melt {
+    font-family: 'Climate Crisis', var(--font-sans);
+    font-weight: 400;
+    font-size: 36px;
+    letter-spacing: 0;
+    line-height: 1;
+  }
+  .sub .heading { font-size: 20px; }
+  .sub .heading.serif { font-size: 32px; }
+  .sub .heading.grotesk { font-size: 20px; letter-spacing: -.01em; }
+  .sub .heading.pen { font-size: 38px; }
   .underlined { position: relative; padding-bottom: 6px; }
   .underlined svg { position: absolute; left: -2%; bottom: -4px; width: 104%; height: 12px; overflow: visible; }
   .underlined path { fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; }

@@ -38,13 +38,12 @@ const ogImageUrl = ogImage ? new URL(ogImage, base).href : undefined;
     <meta name="twitter:description" content={description} />
     {ogImageUrl && <meta name="twitter:image" content={ogImageUrl} />}
 
+    <!-- Dark by default; the theme toggle's choice is remembered and wins. -->
     <script is:inline>
       (function () {
         var theme;
         try { theme = localStorage.getItem('theme'); } catch (e) {}
-        if (theme !== 'light' && theme !== 'dark') {
-          theme = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
-        }
+        if (theme !== 'light' && theme !== 'dark') theme = 'dark';
         document.documentElement.setAttribute('data-theme', theme);
       })();
     </script>

@@ -1,0 +1,24 @@
+---
+// The Logbook on /thwip/: a heading and its one-line description, laid out like the
+// other sections, that together link to /thwip/logbook/. Hidden while there's nothing logged.
+import SplitFlap from './SplitFlap.astro';
+import { planes, logbookBlurb } from '../data/logbook';
+---
+
+{planes.length > 0 && (
+  <section id="logbook" aria-labelledby="logbook-title">
+    <a href="/thwip/logbook/">
+      <SplitFlap text="Logbook" id="logbook-title" class="title" />
+      <p>{logbookBlurb}</p>
+    </a>
+  </section>
+)}
+
+<style>
+  section { padding: 56px 0 8px; }
+  a { display: block; width: fit-content; }
+  /* A departures board, like the page it opens. Hovering replays the flips. */
+  .title { font-size: 22px; }
+  p { margin-top: 12px; font-size: 14px; color: var(--muted); transition: color .2s var(--ease); }
+  a:hover p, a:focus-visible p { color: var(--text); }
+</style>

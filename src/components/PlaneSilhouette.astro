@@ -1,0 +1,33 @@
+---
+// One aircraft seen from the side, at the same scale as every other one and standing on
+// the same baseline. The traced image is only used as a mask, so it takes the text color.
+import { aircraft, PX_PER_M, VIEW, type AircraftKey } from '../lib/aircraft';
+
+interface Props {
+  type: AircraftKey;
+}
+const { type } = Astro.props;
+const { image } = aircraft[type];
+const w = image.width / PX_PER_M;
+const h = image.height / PX_PER_M;
+const pct = (n: number) => `${+n.toFixed(3)}%`;
+const style = [
+  `width: ${pct((w / VIEW.w) * 100)}`,
+  `height: ${pct((h / VIEW.h) * 100)}`,
+  `left: ${pct(((VIEW.w - w) / 2 / VIEW.w) * 100)}`,
+  `--shape: url(${image.src})`,
+].join('; ');
+---
+
+<div class="silhouette" aria-hidden="true"><span style={style}></span></div>
+
+<style>
+  .silhouette { position: relative; aspect-ratio: 80 / 25; }
+  span {
+    position: absolute;
+    bottom: 2%;
+    background: currentColor;
+    -webkit-mask: var(--shape) center / 100% 100% no-repeat;
+    mask: var(--shape) center / 100% 100% no-repeat;
+  }
+</style>

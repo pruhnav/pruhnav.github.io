@@ -1,0 +1,63 @@
+---
+// The Logbook's entries: every aircraft type flown as a side-view silhouette, all to the
+// same scale; opening one lists the airlines (and liveries) flown on it.
+import PlaneSilhouette from './PlaneSilhouette.astro';
+import { planes } from '../data/logbook';
+---
+
+{planes.length === 0 ? (
+  <p class="empty mono">Nothing logged yet.</p>
+) : (
+  <div class="hangar">
+    {planes.map((p) =>
+      p.airlines.length > 0 ? (
+        <details class="plane">
+          <summary>
+            <PlaneSilhouette type={p.silhouette} />
+            <span class="name">{p.name}</span>
+            <span class="toggle" aria-hidden="true"></span>
+          </summary>
+          <ul class="airlines">
+            {p.airlines.map((a) => (
+              <li><span>{a.airline}</span><span class="livery mono">{a.livery}</span></li>
+            ))}
+          </ul>
+        </details>
+      ) : (
+        <div class="plane">
+          <div class="summary">
+            <PlaneSilhouette type={p.silhouette} />
+            <span class="name">{p.name}</span>
+          </div>
+        </div>
+      ),
+    )}
+  </div>
+)}
+
+<style>
+  .empty { font-size: 13px; color: var(--faint); }
+  /* Every silhouette shares one scale, so the tiles are all the same size. */
+  .hangar { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 12px; align-items: start; }
+  .plane {
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--surface);
+    transition: border-color .2s var(--ease);
+  }
+  details.plane:hover, details.plane[open] { border-color: var(--border-strong); }
+  summary, .summary { position: relative; display: grid; gap: 2px; padding: 12px 14px 14px; list-style: none; }
+  summary { cursor: pointer; }
+  summary::-webkit-details-marker { display: none; }
+  .plane :global(.silhouette) { color: var(--text); opacity: .88; margin-bottom: 8px; }
+  .name { font-size: 14px; font-weight: 600; }
+  /* A small plus that turns into a cross when open. */
+  .toggle { position: absolute; right: 12px; top: 12px; width: 12px; height: 12px; transition: transform .2s var(--ease); }
+  .toggle::before, .toggle::after { content: ''; position: absolute; left: 0; top: 5.25px; width: 12px; height: 1.5px; border-radius: 1px; background: var(--faint); }
+  .toggle::after { transform: rotate(90deg); }
+  details[open] .toggle { transform: rotate(45deg); }
+  .airlines { list-style: none; margin: 0 14px 12px; border-top: 1px solid var(--border); }
+  .airlines li { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 13.5px; }
+  .airlines li:last-child { border-bottom: 0; }
+  .livery { font-size: 11.5px; color: var(--faint); text-align: right; }
+</style>

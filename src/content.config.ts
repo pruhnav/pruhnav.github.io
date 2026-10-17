@@ -56,9 +56,10 @@ const thoughts = defineCollection({
     title: z.string(),
     /** A line under the title, e.g. a song's artists. */
     subtitle: z.string().optional(),
-    date: z.coerce.date(),
+    /** Leave out for a note that introduces its section: it shows without a date and stays at the top. */
+    date: z.coerce.date().optional(),
     /** The section a post belongs to on /thwip/ (see src/lib/thoughts.ts); without one it goes under Thoughts. */
-    series: z.enum(['underlined']).optional(),
+    series: z.enum(['life', 'views', 'underlined']).optional(),
     /** Where to listen, for posts about a song. */
     spotify: z.url().optional(),
     appleMusic: z.url().optional(),
@@ -66,6 +67,10 @@ const thoughts = defineCollection({
     cover: image().optional(),
     /** Lyric cards at the end of the post, under "More lines that I like from this song". */
     moreLines: z.array(z.string()).default([]),
+    /** Spotify playlists shown as record cards at the very end of the post, after any lyric carousel. */
+    playlists: z.array(z.object({ title: z.string(), spotify: z.url(), cover: image() })).default([]),
+    /** The line that leads into the playlists, shown right above them. */
+    playlistsIntro: z.string().optional(),
     tags: z.array(z.string()).default([]),
     /** Drafts show up in `npm run dev` but are left out of the built site. */
     draft: z.boolean().default(false),

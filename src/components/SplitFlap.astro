@@ -1,0 +1,136 @@
+---
+// A heading drawn as a split-flap departures board. When it scrolls into view (and again on
+// hover), each letter flips through the alphabet before settling, like a board posting a new
+// flight. Screen readers just get the text, and without JS the board shows the final letters.
+interface Props {
+  text: string;
+  as?: 'h1' | 'h2';
+  id?: string;
+  class?: string;
+}
+const { text, as: Tag = 'h2', id, class: className } = Astro.props;
+const chars = [...text.toUpperCase()];
+---
+
+<Tag id={id} class:list={['splitflap', className]} data-splitflap>
+  <span class="sr">{text}</span>
+  <span class="board" aria-hidden="true">
+    {chars.map((c) => (
+      <span class="flap" data-char={c}>
+        <span class="half top">{c}</span>
+        <span class="half bottom">{c}</span>
+        <span class="half fold">{c}</span>
+        <span class="half unfold">{c}</span>
+      </span>
+    ))}
+  </span>
+</Tag>
+
+<script>
+  const CHARS = ' ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  /** One full flip, in ms: the top half falls, then the new bottom half lands. */
+  const FLIP = 80;
+  const still = matchMedia('(prefers-reduced-motion: reduce)');
+  const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+  function flip(flap: HTMLElement, next: string) {
+    const [top, bottom, fold, unfold] = [...flap.children] as HTMLElement[];
+    fold.textContent = bottom.textContent;
+    top.textContent = next;
+    unfold.textContent = next;
+    fold.animate(
+      [
+        { transform: 'rotateX(0deg)', filter: 'brightness(1)', visibility: 'visible' },
+        { transform: 'rotateX(-90deg)', filter: 'brightness(.5)', visibility: 'visible' },
+      ],
+      { duration: FLIP / 2, easing: 'ease-in' },
+    );
+    return unfold
+      .animate(
+        [
+          { transform: 'rotateX(90deg)', filter: 'brightness(.5)', visibility: 'visible' },
+          { transform: 'rotateX(0deg)', filter: 'brightness(1)', visibility: 'visible' },
+        ],
+        { duration: FLIP / 2, delay: FLIP / 2, easing: 'ease-out', fill: 'backwards' },
+      )
+      .finished.then(() => {
+        bottom.textContent = next;
+      });
+  }
+
+  // Jump to a letter a few places back, then roll forward through the alphabet to the real one.
+  async function settle(flap: HTMLElement, delay: number) {
+    const end = CHARS.indexOf(flap.dataset.char!);
+    if (end < 0) return;
+    const steps = 5 + Math.floor(Math.random() * 9);
+    await wait(delay);
+    for (let i = steps; i >= 0; i--) await flip(flap, CHARS[(end - i + CHARS.length) % CHARS.length]);
+  }
+
+  function play(board: HTMLElement, delay = 0) {
+    if (board.dataset.playing !== undefined || still.matches) return;
+    board.dataset.playing = '';
+    const flaps = [...board.querySelectorAll<HTMLElement>('.flap')];
+    Promise.all(flaps.map((f, i) => settle(f, delay + i * 60))).then(() => {
+      delete board.dataset.playing;
+    });
+  }
+
+  const seen = new IntersectionObserver(
+    (entries) => {
+      for (const e of entries) {
+        if (!e.isIntersecting) continue;
+        seen.unobserve(e.target);
+        play(e.target as HTMLElement, 250);
+      }
+    },
+    { threshold: 1 },
+  );
+
+  document.querySelectorAll<HTMLElement>('[data-splitflap]').forEach((board) => {
+    seen.observe(board);
+    const trigger = board.closest('a') ?? board;
+    trigger.addEventListener('pointerenter', () => play(board));
+    trigger.addEventListener('focusin', () => play(board));
+  });
+</script>
+
+<style>
+  .splitflap { display: block; line-height: 1; font-weight: 500; letter-spacing: 0; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .board { display: inline-flex; gap: .1em; }
+  /* Dark tiles in both themes, like a real board. */
+  .flap {
+    position: relative;
+    width: .82em;
+    height: 1.22em;
+    border-radius: .11em;
+    perspective: 2.5em;
+    font-family: var(--font-mono);
+    line-height: 1.22em;
+    text-align: center;
+    color: #f4f4f5;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, .3), inset 0 0 0 1px rgba(255, 255, 255, .05);
+  }
+  .half {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: #1c1c20;
+    backface-visibility: hidden;
+  }
+  .top, .fold { clip-path: inset(0 0 50% 0); background: #232327; }
+  .bottom, .unfold { clip-path: inset(50% 0 0 0); }
+  /* The two moving halves only show while a flip is running. */
+  .fold, .unfold { transform-origin: 50% 50%; visibility: hidden; }
+  /* The hairline gap between the top and bottom flaps. */
+  .flap::after {
+    content: '';
+    position: absolute;
+    top: calc(50% - .5px);
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: rgba(0, 0, 0, .65);
+  }
+</style>

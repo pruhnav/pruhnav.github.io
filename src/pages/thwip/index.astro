@@ -2,21 +2,36 @@
 // Section heading fonts for this page only (Latin subsets).
 import '@fontsource/bricolage-grotesque/latin-800.css';
 import '@fontsource/nanum-pen-script/latin-400.css';
+import '@fontsource/instrument-serif/latin-400.css';
+import '@fontsource/monoton/latin-400.css';
+import '@fontsource/climate-crisis/latin-400.css';
 import Base from '../../layouts/Base.astro';
 import Header from '../../components/Header.astro';
 import ThwipBanner from '../../components/ThwipBanner.astro';
 import Section from '../../components/Section.astro';
 import OnRepeat from '../../components/OnRepeat.astro';
+import PostList from '../../components/PostList.astro';
+import LogbookLink from '../../components/LogbookLink.astro';
+import ThreadDivider from '../../components/ThreadDivider.astro';
 import Footer from '../../components/Footer.astro';
 import ThwipFooterArt from '../../components/ThwipFooterArt.astro';
-import { getThoughts, sections, sectionOf, formatDate, isoDate } from '../../lib/thoughts';
+import { getThoughts, sections, sectionOf } from '../../lib/thoughts';
 import { site } from '../../lib/site';
 
 const posts = await getThoughts();
-// One page, one section per series, like the homepage. Empty sections stay hidden.
+// One page, one section per series, like the homepage, in the order set in src/lib/thoughts.ts.
+// A section shows once it has a post or a blurb to introduce it; music always shows (the albums
+// on repeat, with the music series under them). The Logbook always closes the page.
 const filled = sections
   .map((section) => ({ ...section, posts: posts.filter((p) => sectionOf(p).id === section.id) }))
-  .filter((s) => s.posts.length > 0);
+  .filter((s) => s.id === 'music' || s.posts.length > 0 || s.blurb);
+const inMusic = filled.filter((s) => s.music);
+const top = filled.filter((s) => !s.music);
+
+// A silk thread with a spider on it divides every section; the spiders sit at different
+// spots and walk at different paces so they don't line up.
+const spots = [{ at: 72, pace: 15 }, { at: 26, pace: 18 }, { at: 58, pace: 16.5 }, { at: 38, pace: 19 }];
+const spot = (i: number) => spots[i % spots.length];
 ---
 
 <Base title={`thwip · ${site.name}`} description="Thoughts on stuff going on in my life and in the world." noindex>
@@ -32,29 +47,25 @@ const filled = sections
         you ever make it here, let me know.
       </p>
     </div>
-    <OnRepeat />
-    {filled.map((s) => (
-      <Section id={s.id} title={s.title} font={s.font} underline={s.underline}>
-        {s.blurb && <p class="blurb">{s.blurb}</p>}
-        <ul class="posts">
-          {s.posts.map(({ id, data }) => (
-            <li>
-              <a href={`/thwip/${id}/`}>
-                <time class="mono" datetime={isoDate(data.date)}>{formatDate(data.date)}</time>
-                <span class="name">
-                  <span class="title">{data.title}</span>
-                  {data.subtitle && <span class="sub">{data.subtitle}</span>}
-                </span>
-                <span class="tags">
-                  {data.draft && <span class="chip">draft</span>}
-                  {data.tags.map((t) => <span class="chip">{t}</span>)}
-                </span>
-              </a>
-            </li>
-          ))}
-        </ul>
-      </Section>
+    {top.map((s, i) => (
+      <>
+        <ThreadDivider {...spot(i)} />
+        <Section id={s.id} title={s.title} font={s.font} underline={s.underline}>
+          {s.blurb && <p class="blurb">{s.blurb}</p>}
+          {s.id === 'music' && <OnRepeat />}
+          {s.id === 'music' &&
+            inMusic.map((m) => (
+              <Section id={m.id} title={m.title} font={m.font} underline={m.underline} sub>
+                {m.blurb && <p class="blurb">{m.blurb}</p>}
+                {m.posts.length > 0 && <PostList posts={m.posts} />}
+              </Section>
+            ))}
+          {s.posts.length > 0 && <PostList posts={s.posts} />}
+        </Section>
+      </>
     ))}
+    <ThreadDivider {...spot(top.length)} />
+    <LogbookLink />
     {posts.length === 0 && <p class="empty mono">Nothing here yet.</p>}
   </main>
   <Footer cta={false}><ThwipFooterArt slot="art" /></Footer>
@@ -81,15 +92,7 @@ const filled = sections
     overflow: visible;
   }
   .cobweb path { fill: none; stroke: currentColor; stroke-width: .7; stroke-linecap: round; opacity: .85; }
-  .intro p { color: var(--muted); font-size: 14px; max-width: 60ch; }  .blurb { color: var(--muted); font-size: 14px; margin: -8px 0 16px; max-width: 52ch; }
-  .posts { list-style: none; border-top: 1px solid var(--border); }
-  .posts li { border-bottom: 1px solid var(--border); }
-  .posts a { display: grid; grid-template-columns: 104px 1fr auto; gap: 12px; align-items: baseline; padding: 12px 0; }
-  .posts a:hover .title { text-decoration: underline; text-underline-offset: 3px; }
-  time { font-size: 12px; color: var(--faint); }
-  .name { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 8px; }
-  .title { font-size: 15px; font-weight: 500; }
-  .sub { font-size: 13px; color: var(--muted); }
-  .tags { display: flex; gap: 5px; }
+  .intro p { color: var(--muted); font-size: 14px; max-width: 60ch; }
+  .blurb { color: var(--muted); font-size: 14px; margin: -8px 0 16px; max-width: 60ch; }
   .empty { margin-top: 32px; font-size: 13px; color: var(--faint); }
 </style>

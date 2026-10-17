@@ -1,0 +1,51 @@
+---
+// The divider between sections on /thwip/: a strand of silk across the page with the
+// spider walking along it. Every so often it crawls a little way, turns around and comes back.
+import Spider from './Spider.astro';
+
+interface Props {
+  /** Where along the thread the spider starts, in percent. */
+  at?: number;
+  /** Seconds for one walk out and back; varied so the spiders don't move in step. */
+  pace?: number;
+}
+const { at = 70, pace = 16 } = Astro.props;
+---
+
+<div class="thread" aria-hidden="true" style={`--at:${at}%;--pace:${pace}s`}>
+  <span class="walker"><Spider size={14} /></span>
+</div>
+
+<style>
+  .thread { position: relative; height: 14px; margin-top: 40px; }
+  /* The silk: a hairline that fades out at both ends. A border (rather than a 1px background)
+     always snaps to a whole pixel, so the line stays crisp wherever it lands on the page. */
+  .thread::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 6px;
+    border-top: 1px solid var(--border-strong);
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 15%, #000 85%, transparent);
+    mask-image: linear-gradient(to right, transparent, #000 15%, #000 85%, transparent);
+  }
+  .walker {
+    position: absolute;
+    top: 0;
+    left: var(--at);
+    margin-left: -7px;
+    color: var(--muted);
+    transform: rotate(90deg);
+    animation: crawl var(--pace) ease-in-out infinite;
+  }
+  .walker :global(svg) { display: block; }
+  /* Walk right, pause, turn, walk back, pause, turn. */
+  @keyframes crawl {
+    0%, 8% { transform: translateX(0) rotate(90deg); }
+    38% { transform: translateX(34px) rotate(90deg); }
+    46%, 52% { transform: translateX(34px) rotate(-90deg); }
+    84% { transform: translateX(0) rotate(-90deg); }
+    92%, 100% { transform: translateX(0) rotate(90deg); }
+  }
+</style>

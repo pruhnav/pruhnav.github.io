@@ -1,0 +1,35 @@
+---
+import Base from '../../layouts/Base.astro';
+import Header from '../../components/Header.astro';
+import ThwipBanner from '../../components/ThwipBanner.astro';
+import Footer from '../../components/Footer.astro';
+import ThwipFooterArt from '../../components/ThwipFooterArt.astro';
+import Spider from '../../components/Spider.astro';
+import LogbookEntries from '../../components/LogbookEntries.astro';
+import SplitFlap from '../../components/SplitFlap.astro';
+import { logbookBlurb } from '../../data/logbook';
+import { site } from '../../lib/site';
+---
+
+<Base title={`Logbook · ${site.name}`} description={logbookBlurb} noindex>
+  <Header simple overlay />
+  <main class="wrap">
+    <ThwipBanner />
+    <article>
+      <a class="back mono" href="/thwip/#logbook"><Spider size={14} />thwip / logbook</a>
+      <SplitFlap as="h1" text="Logbook" class="title" />
+      <p class="blurb">{logbookBlurb}</p>
+      <LogbookEntries />
+    </article>
+  </main>
+  <Footer cta={false}><ThwipFooterArt slot="art" /></Footer>
+</Base>
+
+<style>
+  article { padding-top: 28px; }
+  .back { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--faint); transition: color .2s var(--ease); }
+  .back:hover { color: var(--text); }
+  /* A departures board that flips in on load, and again on hover. */
+  .title { margin-top: 20px; font-size: 28px; }
+  .blurb { margin: 12px 0 22px; font-size: 14px; color: var(--muted); }
+</style>

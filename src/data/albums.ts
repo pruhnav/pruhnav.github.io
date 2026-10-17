@@ -17,7 +17,7 @@ export interface Album {
   spotify: string;
 }
 
-/** "Albums on repeat right now", the first section on /thwip/. */
+/** "On repeat right now", the first part of Music on /thwip/. */
 export const onRepeat: Album[] = [
   {
     title: 'Her Loss',
