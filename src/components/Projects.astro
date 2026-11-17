@@ -13,7 +13,7 @@ const rest = all.filter((p) => !p.data.featured);
 <Section id="projects" title="Projects" note={`${all.length} total`}>
   <div class="grid">
     {featured.map(({ data }) => {
-      const primary = data.repo ?? data.demo;
+      const primary = data.repo ?? data.demo ?? data.site;
       return (
         <article class="card">
           <a class="shot" href={primary} target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
@@ -39,6 +39,7 @@ const rest = all.filter((p) => !p.data.featured);
             <div class="foot">
               <div class="tags">{data.tags.map((t) => <span class="chip">{t}</span>)}</div>
               <div class="links">
+                {data.site && <a class="link-arrow" href={data.site} target="_blank" rel="noopener"><LinkIcon href={data.site} />Site</a>}
                 {data.demo && <a class="link-arrow" href={data.demo} target="_blank" rel="noopener"><LinkIcon href={data.demo} />Live</a>}
                 {data.media && <a class="link-arrow" href={data.media} target="_blank" rel="noopener"><LinkIcon href={data.media} />Media</a>}
                 {data.paper && <a class="link-arrow" href={data.paper} target="_blank" rel="noopener"><LinkIcon href={data.paper} />Paper</a>}
@@ -54,7 +55,7 @@ const rest = all.filter((p) => !p.data.featured);
   <h3 class="sub mono">More projects</h3>
   <ul class="rest">
     {rest.map(({ data }) => {
-      const href = data.repo ?? data.demo;
+      const href = data.repo ?? data.demo ?? data.site;
       const inner = (
         <>
           <span class="yr mono">{data.year}</span>

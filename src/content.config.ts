@@ -36,6 +36,8 @@ const projects = defineCollection({
       tags: z.array(z.string()).default([]),
       repo: z.url().optional(),
       demo: z.url().optional(),
+      /** The product's own website; shows a "Site" link on featured cards. */
+      site: z.url().optional(),
       /** Published paper for the project; shows a "Paper" link on featured cards. */
       paper: z.url().optional(),
       /** Coverage of the project, such as an organizer's post; shows a "Media" link on featured cards. */
